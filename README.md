@@ -16,3 +16,8 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+## Contributing
+
+Fork the repository and push changes to a new branch. Then submit pull requests to merge with main.
+
+Follow the guide (https://github.com/dustij/shinytoys/blob/main/README.md)[here].
