@@ -21,3 +21,6 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 Fork the repository and push changes to a new branch. Then submit pull requests to merge with main.
 
 Follow the guide [here](https://github.com/dustij/shinytoys/blob/main/README.md).
+
+### Contact
+Admin: Dusti Johnson
