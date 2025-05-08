@@ -22,5 +22,8 @@ Fork the repository and push changes to a new branch. Then submit pull requests 
 
 Follow the guide [here](https://github.com/dustij/shinytoys/blob/main/README.md).
 
-### Contact
-Admin: Dusti Johnson
+### Admin
+
+Dusti Johnson github.com/dustij
+
+### Contributors
