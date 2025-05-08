@@ -24,6 +24,6 @@ Follow the guide [here](https://github.com/dustij/shinytoys/blob/main/README.md)
 
 ### Admin
 
-Dusti Johnson github.com/dustij
+Dusti Johnson [github.com/dustij](https://github.com/dustij)
 
 ### Contributors
