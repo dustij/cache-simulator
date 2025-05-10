@@ -115,7 +115,6 @@ export function InteractiveArea() {
                 nWay: 2,
                 blockSize: 2,
               });
-              setMapping("direct");
             }}
           >
             Reset
