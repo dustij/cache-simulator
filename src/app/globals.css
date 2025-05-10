@@ -12,15 +12,47 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
   }
-}
+} */
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+select {
+  @apply bg-white px-2 rounded-sm text-center min-w-14 border border-gray-400/30;
+}
+
+button {
+  @apply bg-black text-white px-10 rounded-sm text-center min-w-14 border border-gray-400/30 ;
+}
+
+button:hover {
+  @apply cursor-pointer
+}
+
+.radio-button {
+  @apply bg-white text-black;
+}
+
+.radio-button.left {
+  @apply bg-white text-black rounded-r-none;
+}
+
+.radio-button.center {
+  @apply bg-white text-black rounded-none border-r-0 border-l-0;
+}
+
+.radio-button.right {
+  @apply bg-white text-black rounded-l-none;
+}
+
+.radio-button.selected {
+  @apply bg-black text-white;
 }
