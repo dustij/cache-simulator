@@ -1,3 +1,4 @@
+import { InteractiveArea } from "@/components/InteractiveArea";
 import { debugging } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 
@@ -14,12 +15,7 @@ export default function Home() {
           Cache Simulator
         </h1>
       </header>
-      <main
-        className={cn(
-          "min-h-[720px] min-w-[950px]",
-          debugging ? "bg-green-300" : "",
-        )}
-      ></main>
+      <InteractiveArea />
     </div>
   );
 }
