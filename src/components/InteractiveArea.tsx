@@ -2,22 +2,29 @@
 
 import { debugging } from "@/lib/constants";
 import { cn } from "@/lib/utils";
-import { useEffect, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { DirectMapped } from "./mappings/DirectMapped";
 import { FullyAssociative } from "./mappings/FullyAssociative";
 import { MappingView } from "./mappings/MappingView";
 import { SetAssociative } from "./mappings/SetAssociative";
 
-interface CahceConfig {
+interface CacheConfig {
   ramBlocks: number;
   cacheBlocks: number;
   nWay: number;
   blockSize: number;
 }
 
+interface CacheContextType {
+  config: CacheConfig;
+  mapping: "direct" | "fully" | "set";
+}
+
+export const CacheContext = createContext<CacheContextType | null>(null);
+
 export function InteractiveArea() {
   const [mapping, setMapping] = useState<"direct" | "fully" | "set">("direct");
-  const [config, setConfig] = useState<CahceConfig>({
+  const [config, setConfig] = useState<CacheConfig>({
     ramBlocks: 4,
     cacheBlocks: 2,
     nWay: 2,
@@ -168,7 +175,9 @@ export function InteractiveArea() {
             debugging ? "bg-teal-300" : "",
           )}
         >
-          <MappingView>{views[mapping] ?? null}</MappingView>
+          <CacheContext.Provider value={{ config, mapping }}>
+            <MappingView>{views[mapping] ?? null}</MappingView>
+          </CacheContext.Provider>
         </div>
       </div>
     </main>
