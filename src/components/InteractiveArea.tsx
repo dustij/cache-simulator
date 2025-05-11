@@ -3,6 +3,10 @@
 import { debugging } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
+import { DirectMapped } from "./mappings/DirectMapped";
+import { FullyAssociative } from "./mappings/FullyAssociative";
+import { MappingView } from "./mappings/MappingView";
+import { SetAssociative } from "./mappings/SetAssociative";
 
 interface CahceConfig {
   ramBlocks: number;
@@ -12,7 +16,7 @@ interface CahceConfig {
 }
 
 export function InteractiveArea() {
-  const [mapping, setMapping] = useState("direct");
+  const [mapping, setMapping] = useState<"direct" | "fully" | "set">("direct");
   const [config, setConfig] = useState<CahceConfig>({
     ramBlocks: 4,
     cacheBlocks: 2,
@@ -23,6 +27,12 @@ export function InteractiveArea() {
   useEffect(() => {
     console.log(config);
   }, [config]);
+
+  const views = {
+    direct: <DirectMapped />,
+    fully: <FullyAssociative />,
+    set: <SetAssociative />,
+  };
 
   return (
     <main className={cn("flex-1 overflow-x-auto")}>
@@ -153,8 +163,13 @@ export function InteractiveArea() {
           </div>
         </div>
         <div
-          className={cn("w-full flex-grow", debugging ? "bg-teal-300" : "")}
-        ></div>
+          className={cn(
+            "flex w-full flex-grow",
+            debugging ? "bg-teal-300" : "",
+          )}
+        >
+          <MappingView>{views[mapping] ?? null}</MappingView>
+        </div>
       </div>
     </main>
   );
