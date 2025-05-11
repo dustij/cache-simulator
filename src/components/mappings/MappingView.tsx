@@ -5,11 +5,18 @@ export function MappingView({ children }: { children: React.ReactNode }) {
   return (
     <div
       className={cn(
-        "relative m-6 flex flex-grow border-1",
+        "relative flex flex-grow border-1 p-8",
         debugging ? "bg-lime-300" : "",
       )}
     >
-      {children}
+      <div
+        className={cn(
+          "relative flex flex-grow",
+          debugging ? "bg-lime-300" : "",
+        )}
+      >
+        {children}
+      </div>
     </div>
   );
 }

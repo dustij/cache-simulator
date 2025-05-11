@@ -11,7 +11,7 @@ export default function Home() {
       )}
     >
       <header className="">
-        <h1 className="text-center text-4xl font-bold tracking-tighter text-balance text-zinc-800 sm:text-5xl dark:text-zinc-100">
+        <h1 className="text-center text-4xl font-bold tracking-tighter text-balance sm:text-5xl">
           Cache Simulator
         </h1>
       </header>
