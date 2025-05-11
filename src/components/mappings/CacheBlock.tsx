@@ -5,7 +5,7 @@ interface blockData {
   address: number;
 }
 
-export function Block({
+export function CacheBlock({
   index,
   size,
   isTop,

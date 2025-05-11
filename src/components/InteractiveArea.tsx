@@ -46,11 +46,11 @@ export function InteractiveArea() {
       <div
         className={cn(
           "mx-auto flex min-h-[720px] min-w-[950px] flex-col items-center gap-2",
-          debugging ? "bg-green-300" : "",
+          debugging && "bg-green-300",
         )}
       >
         {/* config settings */}
-        <div className={cn("flex gap-6", debugging ? "bg-violet-300" : "")}>
+        <div className={cn("flex gap-6", debugging && "bg-violet-300")}>
           <div className="flex gap-2">
             <label htmlFor="ram-blocks">Ram Blocks:</label>
             <select
@@ -138,7 +138,7 @@ export function InteractiveArea() {
           </button>
         </div>
         {/* config scheme */}
-        <div className={cn(debugging ? "bg-pink-300" : "")}>
+        <div className={cn(debugging && "bg-pink-300")}>
           <div>
             <button
               className={cn(
@@ -170,10 +170,7 @@ export function InteractiveArea() {
           </div>
         </div>
         <div
-          className={cn(
-            "flex w-full flex-grow",
-            debugging ? "bg-teal-300" : "",
-          )}
+          className={cn("flex w-full flex-grow", debugging && "bg-teal-300")}
         >
           <CacheContext.Provider value={{ config, mapping }}>
             <MappingView>{views[mapping] ?? null}</MappingView>

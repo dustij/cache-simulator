@@ -7,7 +7,7 @@ export default function Home() {
     <div
       className={cn(
         "flex flex-grow flex-col gap-6 py-6 lg:items-center",
-        debugging ? "bg-amber-300" : "",
+        debugging && "bg-amber-300",
       )}
     >
       <header className="">
