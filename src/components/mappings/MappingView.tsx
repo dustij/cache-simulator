@@ -5,14 +5,14 @@ export function MappingView({ children }: { children: React.ReactNode }) {
   return (
     <div
       className={cn(
-        "relative flex flex-grow border-1 p-8",
+        "relative mt-2 flex flex-grow border-1 p-8",
         debugging ? "bg-lime-300" : "",
       )}
     >
       <div
         className={cn(
           "relative flex flex-grow",
-          debugging ? "bg-lime-300" : "",
+          debugging ? "bg-lime-500" : "",
         )}
       >
         {children}
