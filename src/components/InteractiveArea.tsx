@@ -20,6 +20,8 @@ interface CacheContextType {
   config: CacheConfig;
   setConfig: React.Dispatch<React.SetStateAction<CacheConfig>>;
   mapping: "direct" | "fully" | "set";
+  initial: boolean;
+  setInitial: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const CacheContext = createContext<CacheContextType | null>(null);
@@ -33,6 +35,7 @@ export function InteractiveArea() {
     blockSize: 2,
     currentAddress: 0,
   });
+  const [initial, setInitial] = useState(true);
 
   useEffect(() => {
     console.log(config);
@@ -130,6 +133,7 @@ export function InteractiveArea() {
             id="reset"
             onClick={() => {
               setConfig({ ...config, currentAddress: 0 });
+              setInitial(true);
             }}
           >
             Reset
@@ -170,7 +174,9 @@ export function InteractiveArea() {
         <div
           className={cn("flex w-full flex-grow", debugging && "bg-teal-300")}
         >
-          <CacheContext.Provider value={{ config, setConfig, mapping }}>
+          <CacheContext.Provider
+            value={{ config, setConfig, mapping, initial, setInitial }}
+          >
             <MappingView>{views[mapping] ?? null}</MappingView>
           </CacheContext.Provider>
         </div>
