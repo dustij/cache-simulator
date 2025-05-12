@@ -2,26 +2,36 @@
 
 import { debugging } from "@/lib/constants";
 import { cn } from "@/lib/utils";
-import { useEffect, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { DirectMapped } from "./mappings/DirectMapped";
 import { FullyAssociative } from "./mappings/FullyAssociative";
 import { MappingView } from "./mappings/MappingView";
 import { SetAssociative } from "./mappings/SetAssociative";
 
-interface CahceConfig {
+interface CacheConfig {
   ramBlocks: number;
   cacheBlocks: number;
   nWay: number;
   blockSize: number;
+  currentAddress: number;
 }
+
+interface CacheContextType {
+  config: CacheConfig;
+  setConfig: React.Dispatch<React.SetStateAction<CacheConfig>>;
+  mapping: "direct" | "fully" | "set";
+}
+
+export const CacheContext = createContext<CacheContextType | null>(null);
 
 export function InteractiveArea() {
   const [mapping, setMapping] = useState<"direct" | "fully" | "set">("direct");
-  const [config, setConfig] = useState<CahceConfig>({
+  const [config, setConfig] = useState<CacheConfig>({
     ramBlocks: 4,
     cacheBlocks: 2,
     nWay: 2,
     blockSize: 2,
+    currentAddress: 0,
   });
 
   useEffect(() => {
@@ -39,11 +49,11 @@ export function InteractiveArea() {
       <div
         className={cn(
           "mx-auto flex min-h-[720px] min-w-[950px] flex-col items-center gap-2",
-          debugging ? "bg-green-300" : "",
+          debugging && "bg-green-300",
         )}
       >
         {/* config settings */}
-        <div className={cn("flex gap-6", debugging ? "bg-violet-300" : "")}>
+        <div className={cn("flex gap-6", debugging && "bg-violet-300")}>
           <div className="flex gap-2">
             <label htmlFor="ram-blocks">Ram Blocks:</label>
             <select
@@ -119,19 +129,14 @@ export function InteractiveArea() {
           <button
             id="reset"
             onClick={() => {
-              setConfig({
-                ramBlocks: 4,
-                cacheBlocks: 2,
-                nWay: 2,
-                blockSize: 2,
-              });
+              setConfig({ ...config, currentAddress: 0 });
             }}
           >
             Reset
           </button>
         </div>
         {/* config scheme */}
-        <div className={cn(debugging ? "bg-pink-300" : "")}>
+        <div className={cn(debugging && "bg-pink-300")}>
           <div>
             <button
               className={cn(
@@ -163,12 +168,11 @@ export function InteractiveArea() {
           </div>
         </div>
         <div
-          className={cn(
-            "flex w-full flex-grow",
-            debugging ? "bg-teal-300" : "",
-          )}
+          className={cn("flex w-full flex-grow", debugging && "bg-teal-300")}
         >
-          <MappingView>{views[mapping] ?? null}</MappingView>
+          <CacheContext.Provider value={{ config, setConfig, mapping }}>
+            <MappingView>{views[mapping] ?? null}</MappingView>
+          </CacheContext.Provider>
         </div>
       </div>
     </main>

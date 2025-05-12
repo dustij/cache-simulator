@@ -6,7 +6,7 @@ export default function Footer() {
     <footer
       className={cn(
         "flex min-h-12 flex-col items-center justify-center gap-6 px-4 sm:flex-row sm:px-8 lg:px-12",
-        debugging ? "bg-red-300" : "",
+        debugging && "bg-red-300",
       )}
     >
       <p className="text-sm">
