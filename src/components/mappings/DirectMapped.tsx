@@ -29,10 +29,10 @@ export function DirectMapped() {
     );
 
     svgLines.push(
-      <svg key={i} className="absolute top-[65px] left-[307px]" height={900}>
+      <svg key={i} className="absolute top-[65px] left-[307px]" height={500}>
         <line
           x1={0}
-          y1={(i % 2) * 31 + 0.5}
+          y1={(i % config.cacheBlocks) * 32 + 0.5}
           x2={113}
           y2={i * 32 + 0.5}
           stroke="rgba(0, 0, 0, 0.15)"
@@ -52,7 +52,7 @@ export function DirectMapped() {
         <p className="text-center">0x00</p>
         <Arrow direction="right" />
       </div>
-      <div className="absolute left-[150px]">
+      <div className="absolute top-[1px] left-[150px]">
         <p className="text-center">Cache</p>
         <div className="grid grid-cols-[auto_0.5fr_0.5fr_1fr]">
           <div className="p-1"></div>

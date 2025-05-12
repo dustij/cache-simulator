@@ -22,7 +22,7 @@ export function RamBlock({
   return (
     <div
       className={cn(
-        "flex h-[2rem] w-[70px] flex-col gap-[1px] border-r border-b border-l",
+        "flex h-[32px] w-[70px] flex-col gap-[1px] border-r border-b border-l",
         isTop && "border-t",
         size === 16 && "gap-[0.5px]",
       )}

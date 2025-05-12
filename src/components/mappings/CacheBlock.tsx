@@ -21,12 +21,12 @@ export function CacheBlock({
 
   return (
     <>
-      <div className="flex items-center justify-center p-1 text-center">
+      <div className="flex items-center justify-center px-1 text-center">
         {index}
       </div>
       <div
         className={cn(
-          "flex items-center justify-center border-b border-l p-1 text-center",
+          "flex items-center justify-center border-b border-l px-1 text-center",
           isTop && "border-t",
         )}
       >
@@ -34,7 +34,7 @@ export function CacheBlock({
       </div>
       <div
         className={cn(
-          "flex items-center justify-center border-b border-l p-1 text-center",
+          "flex items-center justify-center border-b border-l px-1 text-center",
           isTop && "border-t",
         )}
       >
@@ -42,7 +42,7 @@ export function CacheBlock({
       </div>
       <div
         className={cn(
-          "flex w-[70px] flex-col gap-[1px] border-r border-b border-l",
+          "flex h-[32px] w-[70px] flex-col gap-[1px] border-r border-b border-l",
           isTop && "border-t",
           size === 16 && "gap-[0.5px]",
         )}
