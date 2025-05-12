@@ -43,8 +43,19 @@ export function DirectMapped() {
   }
 
   const offsetBits = Math.floor(Math.log2(config.blockSize));
-  const mask = (1 << offsetBits) - 1;
-  const offset = config.currentAddress & mask;
+  const offsetMask = (1 << offsetBits) - 1;
+  const offset = config.currentAddress & offsetMask;
+
+  const blockBits = Math.floor(Math.log2(config.cacheBlocks));
+  const blockMask = ((1 << offsetBits) << blockBits) - 1;
+  const block = (config.currentAddress & blockMask) >>> offsetBits;
+
+  const addressSize = Math.floor(
+    Math.log2(config.blockSize * config.ramBlocks),
+  );
+
+  const tagBits = addressSize - blockBits - offsetBits;
+  const tag = config.currentAddress >> (addressSize - tagBits);
 
   return (
     <>
@@ -84,10 +95,10 @@ export function DirectMapped() {
           <p className="px-1">Block</p>
           <p className="px-1">Offset</p>
           <div id="tag" className="border px-1">
-            0
+            {tag.toString(2).padStart(tagBits, "0")}
           </div>
           <div id="block" className="border-t border-b px-1">
-            0
+            {block.toString(2).padStart(blockBits, "0")}
           </div>
           <div id="offset" className="border px-1">
             {offset.toString(2).padStart(offsetBits, "0")}
