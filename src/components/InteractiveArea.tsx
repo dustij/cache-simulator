@@ -13,10 +13,12 @@ interface CacheConfig {
   cacheBlocks: number;
   nWay: number;
   blockSize: number;
+  currentAddress: number;
 }
 
 interface CacheContextType {
   config: CacheConfig;
+  setConfig: React.Dispatch<React.SetStateAction<CacheConfig>>;
   mapping: "direct" | "fully" | "set";
 }
 
@@ -29,6 +31,7 @@ export function InteractiveArea() {
     cacheBlocks: 2,
     nWay: 2,
     blockSize: 2,
+    currentAddress: 0,
   });
 
   useEffect(() => {
@@ -126,12 +129,7 @@ export function InteractiveArea() {
           <button
             id="reset"
             onClick={() => {
-              setConfig({
-                ramBlocks: 4,
-                cacheBlocks: 2,
-                nWay: 2,
-                blockSize: 2,
-              });
+              setConfig({ ...config, currentAddress: 0 });
             }}
           >
             Reset
@@ -172,7 +170,7 @@ export function InteractiveArea() {
         <div
           className={cn("flex w-full flex-grow", debugging && "bg-teal-300")}
         >
-          <CacheContext.Provider value={{ config, mapping }}>
+          <CacheContext.Provider value={{ config, setConfig, mapping }}>
             <MappingView>{views[mapping] ?? null}</MappingView>
           </CacheContext.Provider>
         </div>

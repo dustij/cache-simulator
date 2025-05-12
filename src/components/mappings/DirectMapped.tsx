@@ -12,7 +12,7 @@ export function DirectMapped() {
   if (!context)
     throw new Error("DirectMapped must be used within a CacheProvider");
 
-  const { config, mapping } = context;
+  const { config } = context;
 
   const cacheBlocks = [];
   for (let i = 0; i < config.cacheBlocks; i++) {
@@ -42,6 +42,10 @@ export function DirectMapped() {
     );
   }
 
+  const offsetBits = Math.floor(Math.log2(config.blockSize));
+  const mask = (1 << offsetBits) - 1;
+  const offset = config.currentAddress & mask;
+
   return (
     <>
       <div className="absolute top-[25px] w-[53px]">
@@ -49,7 +53,9 @@ export function DirectMapped() {
         <div className="h-[97px] w-[53px] border border-black"></div>
       </div>
       <div className="absolute top-[48px] left-[53px]">
-        <p className="text-center">0x00</p>
+        <p className="text-center">
+          0x{config.currentAddress.toString(16).toUpperCase().padStart(2, "0")}
+        </p>
         <Arrow direction="right" />
       </div>
       <div className="absolute top-[1px] left-[150px]">
@@ -77,9 +83,15 @@ export function DirectMapped() {
           <p className="px-1">Tag</p>
           <p className="px-1">Block</p>
           <p className="px-1">Offset</p>
-          <div className="border px-1">0</div>
-          <div className="border-t border-b px-1">0</div>
-          <div className="border px-1">0</div>
+          <div id="tag" className="border px-1">
+            0
+          </div>
+          <div id="block" className="border-t border-b px-1">
+            0
+          </div>
+          <div id="offset" className="border px-1">
+            {offset.toString(2).padStart(offsetBits, "0")}
+          </div>
         </div>
         <div className="flex gap-3 pt-2.5">
           <div className="flex gap-0.5">
