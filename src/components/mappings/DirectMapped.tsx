@@ -69,6 +69,7 @@ export function DirectMapped() {
       </div>
       <div className="absolute top-[1px] left-[150px]">
         <p className="text-center">Cache</p>
+        {/* CACHE */}
         <div className="grid grid-cols-[auto_0.5fr_0.5fr_1fr]">
           <div className="p-1"></div>
           <p className="text-center">Tag</p>
@@ -77,11 +78,14 @@ export function DirectMapped() {
           {cacheBlocks}
         </div>
       </div>
+      {/* LINES */}
       {svgLines}
+      {/* RAM */}
       <div className="absolute top-[25px] left-[420px]">
         <p className="text-center">RAM</p>
         <div className="flex flex-col">{ramBlocks}</div>
       </div>
+      {/* DETAILS */}
       <div
         className={cn("absolute left-[632px]", debugging && "bg-purple-400")}
       >

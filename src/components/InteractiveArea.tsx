@@ -6,8 +6,8 @@ import { cn } from "@/lib/utils";
 import { createContext, useState } from "react";
 import { DirectMapped } from "./mappings/DirectMapped";
 import { FullyAssociative } from "./mappings/FullyAssociative";
-import { MappingView } from "./mappings/MappingView";
 import { SetAssociative } from "./mappings/SetAssociative";
+import { MappingView } from "./MappingView";
 
 interface CacheConfig {
   ramBlocks: number;
@@ -16,6 +16,7 @@ interface CacheConfig {
   blockSize: number;
   currentAddress: number;
   cacheQueue: Queue<number>;
+  cacheLines: Array<number | null>;
 }
 
 interface CacheContextType {
@@ -37,6 +38,7 @@ export function InteractiveArea() {
     blockSize: 2,
     currentAddress: 0,
     cacheQueue: new Queue(),
+    cacheLines: Array(2).fill(null),
   });
   const [initial, setInitial] = useState(true);
 
@@ -146,6 +148,7 @@ export function InteractiveArea() {
               setConfig((prev) => ({
                 ...prev,
                 currentAddress: 0,
+                cacheLines: Array(prev.cacheBlocks).fill(null),
               }));
               setInitial(true);
               config.cacheQueue.clear();

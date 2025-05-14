@@ -20,16 +20,6 @@ export function RamBlock({
 
   const { config, setConfig, initial, setInitial } = context;
 
-  function addToQueue() {
-    if (!config.cacheQueue.containsValue(index)) {
-      config.cacheQueue.offer(index, config.cacheBlocks);
-    }
-
-    if (config.cacheQueue.size() > config.cacheBlocks) {
-      config.cacheQueue.poll();
-    }
-  }
-
   const blockData = [];
   for (let i = 0; i < size; i++) {
     blockData.push(
@@ -39,15 +29,25 @@ export function RamBlock({
           "group relative h-full",
           !initial && config.currentAddress == index * size + i
             ? "bg-zinc-900"
-            : !initial && config.cacheQueue.containsValue(index)
+            : !initial && config.cacheLines.includes(index)
               ? "bg-zinc-400"
               : "bg-zinc-300",
         )}
         data-tooltip={`Address: ${index * size + i}`}
         onClick={() => {
-          setConfig({ ...config, currentAddress: index * size + i });
-          initial && setInitial(false);
-          addToQueue();
+          const address = index * size + i;
+          const blockIndex = index;
+          const lineIndex = blockIndex % config.cacheBlocks;
+          const newCacheLines = [...config.cacheLines];
+          newCacheLines[lineIndex] = blockIndex;
+          setConfig({
+            ...config,
+            currentAddress: address,
+            cacheLines: newCacheLines,
+          });
+          if (initial) {
+            setInitial(false);
+          }
         }}
       >
         <div
