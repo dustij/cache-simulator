@@ -1,3 +1,5 @@
+"use client";
+
 import { cn } from "@/lib/utils";
 import { useContext } from "react";
 import { CacheContext } from "../InteractiveArea";
@@ -18,6 +20,16 @@ export function RamBlock({
 
   const { config, setConfig, initial, setInitial } = context;
 
+  function addToQueue() {
+    if (!config.cacheQueue.contains(index)) {
+      config.cacheQueue.offer(index);
+    }
+
+    if (config.cacheQueue.size() > config.cacheBlocks) {
+      config.cacheQueue.poll();
+    }
+  }
+
   const blockData = [];
   for (let i = 0; i < size; i++) {
     blockData.push(
@@ -27,12 +39,15 @@ export function RamBlock({
           "group relative h-full",
           !initial && config.currentAddress == index * size + i
             ? "bg-zinc-900"
-            : "bg-zinc-300",
+            : !initial && config.cacheQueue.contains(index)
+              ? "bg-zinc-400"
+              : "bg-zinc-300",
         )}
         data-tooltip={`Address: ${index * size + i}`}
         onClick={() => {
           setConfig({ ...config, currentAddress: index * size + i });
           initial && setInitial(false);
+          addToQueue();
         }}
       >
         <div
@@ -52,7 +67,7 @@ export function RamBlock({
       className={cn(
         "flex h-[32px] w-[70px] flex-col gap-[1px] border-r border-b border-l",
         isTop && "border-t",
-        size === 16 && "gap-[0.5px]",
+        size > 4 && "gap-[0.5px]",
       )}
     >
       {blockData}

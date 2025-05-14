@@ -1,8 +1,9 @@
 "use client";
 
 import { debugging } from "@/lib/constants";
+import { Queue } from "@/lib/queue";
 import { cn } from "@/lib/utils";
-import { createContext, useEffect, useState } from "react";
+import { createContext, useState } from "react";
 import { DirectMapped } from "./mappings/DirectMapped";
 import { FullyAssociative } from "./mappings/FullyAssociative";
 import { MappingView } from "./mappings/MappingView";
@@ -14,6 +15,7 @@ interface CacheConfig {
   nWay: number;
   blockSize: number;
   currentAddress: number;
+  cacheQueue: Queue<number>;
 }
 
 interface CacheContextType {
@@ -34,12 +36,9 @@ export function InteractiveArea() {
     nWay: 2,
     blockSize: 2,
     currentAddress: 0,
+    cacheQueue: new Queue(),
   });
   const [initial, setInitial] = useState(true);
-
-  useEffect(() => {
-    console.log(config);
-  }, [config]);
 
   const views = {
     direct: <DirectMapped />,
@@ -63,12 +62,15 @@ export function InteractiveArea() {
               name="ram-blocks"
               id="ram-blocks"
               value={config.ramBlocks}
-              onChange={(el) =>
+              onChange={(el) => {
                 setConfig((prev) => ({
                   ...prev,
                   ramBlocks: Number(el.target.value),
-                }))
-              }
+                  currentAddress: 0,
+                }));
+                setInitial(true);
+                config.cacheQueue.clear();
+              }}
             >
               <option value="4">4</option>
               <option value="8">8</option>
@@ -81,12 +83,15 @@ export function InteractiveArea() {
               name="cache-blocks"
               id="cache-blocks"
               value={config.cacheBlocks}
-              onChange={(el) =>
+              onChange={(el) => {
                 setConfig((prev) => ({
                   ...prev,
                   cacheBlocks: Number(el.target.value),
-                }))
-              }
+                  currentAddress: 0,
+                }));
+                setInitial(true);
+                config.cacheQueue.clear();
+              }}
             >
               <option value="2">2</option>
               <option value="4">4</option>
@@ -99,12 +104,15 @@ export function InteractiveArea() {
               name="n-way"
               id="n-way"
               value={config.nWay}
-              onChange={(el) =>
+              onChange={(el) => {
                 setConfig((prev) => ({
                   ...prev,
                   nWay: Number(el.target.value),
-                }))
-              }
+                  currentAddress: 0,
+                }));
+                setInitial(true);
+                config.cacheQueue.clear();
+              }}
             >
               <option value="2">2</option>
               <option value="4">4</option>
@@ -116,12 +124,15 @@ export function InteractiveArea() {
               name="block-size"
               id="block-size"
               value={config.blockSize}
-              onChange={(el) =>
+              onChange={(el) => {
                 setConfig((prev) => ({
                   ...prev,
                   blockSize: Number(el.target.value),
-                }))
-              }
+                  currentAddress: 0,
+                }));
+                setInitial(true);
+                config.cacheQueue.clear();
+              }}
             >
               <option value="2">2</option>
               <option value="4">4</option>
@@ -132,8 +143,12 @@ export function InteractiveArea() {
           <button
             id="reset"
             onClick={() => {
-              setConfig({ ...config, currentAddress: 0 });
+              setConfig((prev) => ({
+                ...prev,
+                currentAddress: 0,
+              }));
               setInitial(true);
+              config.cacheQueue.clear();
             }}
           >
             Reset
