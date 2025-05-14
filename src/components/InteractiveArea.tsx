@@ -1,8 +1,9 @@
 "use client";
 
 import { debugging } from "@/lib/constants";
+import { Queue } from "@/lib/queue";
 import { cn } from "@/lib/utils";
-import { createContext, useEffect, useState } from "react";
+import { createContext, useState } from "react";
 import { DirectMapped } from "./mappings/DirectMapped";
 import { FullyAssociative } from "./mappings/FullyAssociative";
 import { MappingView } from "./mappings/MappingView";
@@ -14,12 +15,15 @@ interface CacheConfig {
   nWay: number;
   blockSize: number;
   currentAddress: number;
+  cacheQueue: Queue<number>;
 }
 
 interface CacheContextType {
   config: CacheConfig;
   setConfig: React.Dispatch<React.SetStateAction<CacheConfig>>;
   mapping: "direct" | "fully" | "set";
+  initial: boolean;
+  setInitial: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const CacheContext = createContext<CacheContextType | null>(null);
@@ -32,11 +36,9 @@ export function InteractiveArea() {
     nWay: 2,
     blockSize: 2,
     currentAddress: 0,
+    cacheQueue: new Queue(),
   });
-
-  useEffect(() => {
-    console.log(config);
-  }, [config]);
+  const [initial, setInitial] = useState(true);
 
   const views = {
     direct: <DirectMapped />,
@@ -60,12 +62,15 @@ export function InteractiveArea() {
               name="ram-blocks"
               id="ram-blocks"
               value={config.ramBlocks}
-              onChange={(el) =>
+              onChange={(el) => {
                 setConfig((prev) => ({
                   ...prev,
                   ramBlocks: Number(el.target.value),
-                }))
-              }
+                  currentAddress: 0,
+                }));
+                setInitial(true);
+                config.cacheQueue.clear();
+              }}
             >
               <option value="4">4</option>
               <option value="8">8</option>
@@ -78,12 +83,15 @@ export function InteractiveArea() {
               name="cache-blocks"
               id="cache-blocks"
               value={config.cacheBlocks}
-              onChange={(el) =>
+              onChange={(el) => {
                 setConfig((prev) => ({
                   ...prev,
                   cacheBlocks: Number(el.target.value),
-                }))
-              }
+                  currentAddress: 0,
+                }));
+                setInitial(true);
+                config.cacheQueue.clear();
+              }}
             >
               <option value="2">2</option>
               <option value="4">4</option>
@@ -96,12 +104,15 @@ export function InteractiveArea() {
               name="n-way"
               id="n-way"
               value={config.nWay}
-              onChange={(el) =>
+              onChange={(el) => {
                 setConfig((prev) => ({
                   ...prev,
                   nWay: Number(el.target.value),
-                }))
-              }
+                  currentAddress: 0,
+                }));
+                setInitial(true);
+                config.cacheQueue.clear();
+              }}
             >
               <option value="2">2</option>
               <option value="4">4</option>
@@ -113,12 +124,15 @@ export function InteractiveArea() {
               name="block-size"
               id="block-size"
               value={config.blockSize}
-              onChange={(el) =>
+              onChange={(el) => {
                 setConfig((prev) => ({
                   ...prev,
                   blockSize: Number(el.target.value),
-                }))
-              }
+                  currentAddress: 0,
+                }));
+                setInitial(true);
+                config.cacheQueue.clear();
+              }}
             >
               <option value="2">2</option>
               <option value="4">4</option>
@@ -129,7 +143,12 @@ export function InteractiveArea() {
           <button
             id="reset"
             onClick={() => {
-              setConfig({ ...config, currentAddress: 0 });
+              setConfig((prev) => ({
+                ...prev,
+                currentAddress: 0,
+              }));
+              setInitial(true);
+              config.cacheQueue.clear();
             }}
           >
             Reset
@@ -170,7 +189,9 @@ export function InteractiveArea() {
         <div
           className={cn("flex w-full flex-grow", debugging && "bg-teal-300")}
         >
-          <CacheContext.Provider value={{ config, setConfig, mapping }}>
+          <CacheContext.Provider
+            value={{ config, setConfig, mapping, initial, setInitial }}
+          >
             <MappingView>{views[mapping] ?? null}</MappingView>
           </CacheContext.Provider>
         </div>
