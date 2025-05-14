@@ -34,21 +34,18 @@ export function CacheBlock({
 
   const blockData = [];
   for (let i = 0; i < size; i++) {
+    const isCurrentBlock = !initial && block % config.cacheBlocks === index;
+    const isValid = !initial && config.cacheLines[index] !== null;
+    const cellClass = isCurrentBlock
+      ? offset === i
+        ? "bg-zinc-900"
+        : "bg-zinc-400"
+      : isValid
+        ? "bg-zinc-400"
+        : "bg-zinc-300";
+
     blockData.push(
-      <div
-        key={i}
-        className={cn(
-          "h-full bg-zinc-300",
-          !initial && config.cacheQueue.containsMappedValue(index)
-            ? "bg-zinc-400"
-            : "bg-zinc-300",
-          // !initial && block % config.cacheBlocks === index
-          //   ? offset === i
-          //     ? "bg-zinc-900"
-          //     : "bg-zinc-400"
-          //   : "bg-zinc-300",
-        )}
-      ></div>,
+      <div key={i} className={cn("h-full bg-zinc-300", cellClass)}></div>,
     );
   }
 
