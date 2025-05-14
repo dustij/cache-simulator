@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@/lib/utils";
+import { cn, getBlock, getOffest, getTag } from "@/lib/utils";
 import { useContext } from "react";
 import { CacheContext } from "../InteractiveArea";
 
@@ -19,13 +19,18 @@ export function CacheBlock({
 
   const { config, initial } = context;
 
-  const offsetBits = Math.floor(Math.log2(config.blockSize));
-  const offsetMask = (1 << offsetBits) - 1;
-  const offset = config.currentAddress & offsetMask;
-
-  const blockBits = Math.floor(Math.log2(config.cacheBlocks));
-  const blockMask = ((1 << offsetBits) << blockBits) - 1;
-  const block = (config.currentAddress & blockMask) >>> offsetBits;
+  const offset = getOffest(config.currentAddress, config.blockSize);
+  const block = getBlock(
+    config.currentAddress,
+    config.cacheBlocks,
+    config.blockSize,
+  );
+  const tag = getTag(
+    config.currentAddress,
+    config.ramBlocks,
+    config.cacheBlocks,
+    config.blockSize,
+  );
 
   const blockData = [];
   for (let i = 0; i < size; i++) {
@@ -34,11 +39,14 @@ export function CacheBlock({
         key={i}
         className={cn(
           "h-full bg-zinc-300",
-          !initial && block % config.cacheBlocks === index
-            ? offset === i
-              ? "bg-zinc-900"
-              : "bg-zinc-400"
+          !initial && config.cacheQueue.containsMappedValue(index)
+            ? "bg-zinc-400"
             : "bg-zinc-300",
+          // !initial && block % config.cacheBlocks === index
+          //   ? offset === i
+          //     ? "bg-zinc-900"
+          //     : "bg-zinc-400"
+          //   : "bg-zinc-300",
         )}
       ></div>,
     );

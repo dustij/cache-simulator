@@ -21,8 +21,8 @@ export function RamBlock({
   const { config, setConfig, initial, setInitial } = context;
 
   function addToQueue() {
-    if (!config.cacheQueue.contains(index)) {
-      config.cacheQueue.offer(index);
+    if (!config.cacheQueue.containsValue(index)) {
+      config.cacheQueue.offer(index, config.cacheBlocks);
     }
 
     if (config.cacheQueue.size() > config.cacheBlocks) {
@@ -39,7 +39,7 @@ export function RamBlock({
           "group relative h-full",
           !initial && config.currentAddress == index * size + i
             ? "bg-zinc-900"
-            : !initial && config.cacheQueue.contains(index)
+            : !initial && config.cacheQueue.containsValue(index)
               ? "bg-zinc-400"
               : "bg-zinc-300",
         )}
