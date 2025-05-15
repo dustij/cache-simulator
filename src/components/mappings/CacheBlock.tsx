@@ -32,10 +32,23 @@ export function CacheBlock({
     config.blockSize,
   );
 
+  const loadedBlock = config.cacheLines[index];
+  const blockTag =
+    loadedBlock != null
+      ? getTag(
+          loadedBlock * config.blockSize,
+          config.ramBlocks,
+          config.cacheBlocks,
+          config.blockSize,
+        )
+      : null;
+
+  let isValid = false;
+
   const blockData = [];
   for (let i = 0; i < size; i++) {
     const isCurrentBlock = !initial && block % config.cacheBlocks === index;
-    const isValid = !initial && config.cacheLines[index] !== null;
+    isValid = !initial && config.cacheLines[index] !== null;
     let cellClass = isValid ? "bg-zinc-400" : "bg-zinc-300";
     if (isCurrentBlock) {
       cellClass = i === offset ? "bg-zinc-900" : "bg-zinc-400";
@@ -49,21 +62,23 @@ export function CacheBlock({
       <div className="flex items-center justify-center px-1 text-center">
         {index}
       </div>
+      {/* TAG */}
       <div
         className={cn(
           "flex items-center justify-center border-b border-l px-1 text-center",
           isTop && "border-t",
         )}
       >
-        0
+        {blockTag || 0}
       </div>
+      {/* VALID */}
       <div
         className={cn(
           "flex items-center justify-center border-b border-l px-1 text-center",
           isTop && "border-t",
         )}
       >
-        0
+        {isValid ? 1 : 0}
       </div>
       <div
         className={cn(

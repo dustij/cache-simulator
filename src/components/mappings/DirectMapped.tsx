@@ -35,7 +35,11 @@ export function DirectMapped() {
           y1={(i % config.cacheBlocks) * 32 + 0.5}
           x2={113}
           y2={i * 32 + 0.5}
-          stroke="rgba(0, 0, 0, 0.15)"
+          stroke={
+            config.cacheLines[i % config.cacheBlocks] === i
+              ? "black"
+              : "rgba(0, 0, 0, 0.15)"
+          }
           strokeWidth={1}
         />
       </svg>,

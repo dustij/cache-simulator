@@ -1,7 +1,6 @@
 "use client";
 
 import { debugging } from "@/lib/constants";
-import { Queue } from "@/lib/queue";
 import { cn } from "@/lib/utils";
 import { createContext, useState } from "react";
 import { DirectMapped } from "./mappings/DirectMapped";
@@ -15,7 +14,7 @@ interface CacheConfig {
   nWay: number;
   blockSize: number;
   currentAddress: number;
-  cacheQueue: Queue<number>;
+  // cacheQueue: Queue<number>;
   cacheLines: Array<number | null>;
   lastVictim: number | null;
 }
@@ -38,7 +37,7 @@ export function InteractiveArea() {
     nWay: 2,
     blockSize: 2,
     currentAddress: 0,
-    cacheQueue: new Queue(),
+    // cacheQueue: new Queue(),
     cacheLines: Array(2).fill(null),
     lastVictim: null,
   });
@@ -71,7 +70,7 @@ export function InteractiveArea() {
                   ...prev,
                   ramBlocks: Number(el.target.value),
                   currentAddress: 0,
-                  cacheQueue: new Queue(),
+                  // cacheQueue: new Queue(),
                   cacheLines: Array(prev.cacheBlocks).fill(null),
                   lastVictim: null,
                 }));
@@ -94,7 +93,7 @@ export function InteractiveArea() {
                   ...prev,
                   cacheBlocks: Number(el.target.value),
                   currentAddress: 0,
-                  cacheQueue: new Queue(),
+                  // cacheQueue: new Queue(),
                   cacheLines: Array(Number(el.target.value)).fill(null),
                   lastVictim: null,
                 }));
@@ -117,7 +116,7 @@ export function InteractiveArea() {
                   ...prev,
                   nWay: Number(el.target.value),
                   currentAddress: 0,
-                  cacheQueue: new Queue(),
+                  // cacheQueue: new Queue(),
                   cacheLines: Array(prev.cacheBlocks).fill(null),
                   lastVictim: null,
                 }));
@@ -139,7 +138,7 @@ export function InteractiveArea() {
                   ...prev,
                   blockSize: Number(el.target.value),
                   currentAddress: 0,
-                  cacheQueue: new Queue(),
+                  // cacheQueue: new Queue(),
                   cacheLines: Array(prev.cacheBlocks).fill(null),
                   lastVictim: null,
                 }));
@@ -158,7 +157,7 @@ export function InteractiveArea() {
               setConfig((prev) => ({
                 ...prev,
                 currentAddress: 0,
-                cacheQueue: new Queue(),
+                // cacheQueue: new Queue(),
                 cacheLines: Array(prev.cacheBlocks).fill(null),
                 lastVictim: null,
               }));
