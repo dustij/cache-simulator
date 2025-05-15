@@ -54,6 +54,7 @@ export function RamBlock({
               cacheLines: newCacheLines,
               lastVictim: prev,
               misses: config.misses + 1,
+              wasHit: false,
             });
           } else {
             // cache hit: no eviction: clear previous victim
@@ -63,6 +64,7 @@ export function RamBlock({
               cacheLines: newCacheLines,
               lastVictim: null,
               hits: config.hits + 1,
+              wasHit: true,
             });
           }
           if (initial) {
