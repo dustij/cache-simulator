@@ -20,31 +20,49 @@ export function RamBlock({
 
   const { config, setConfig, initial, setInitial } = context;
 
+  // Track when a cache line was evicted
+  const isVictim = !initial && config.lastVictim === index;
+
   const blockData = [];
   for (let i = 0; i < size; i++) {
+    const address = index * size + i;
     blockData.push(
       <div
         key={i}
         className={cn(
           "group relative h-full",
-          !initial && config.currentAddress == index * size + i
-            ? "bg-zinc-900"
-            : !initial && config.cacheLines.includes(index)
-              ? "bg-zinc-400"
-              : "bg-zinc-300",
+          isVictim
+            ? "bg-red-300"
+            : !initial && config.currentAddress == address
+              ? "bg-zinc-900"
+              : !initial && config.cacheLines.includes(index)
+                ? "bg-zinc-400"
+                : "bg-zinc-300",
         )}
-        data-tooltip={`Address: ${index * size + i}`}
+        data-tooltip={`Address: ${address}`}
         onClick={() => {
-          const address = index * size + i;
           const blockIndex = index;
           const lineIndex = blockIndex % config.cacheBlocks;
           const newCacheLines = [...config.cacheLines];
+          const prev = newCacheLines[lineIndex];
           newCacheLines[lineIndex] = blockIndex;
-          setConfig({
-            ...config,
-            currentAddress: address,
-            cacheLines: newCacheLines,
-          });
+          if (prev !== blockIndex) {
+            // eviction occurred
+            setConfig({
+              ...config,
+              currentAddress: address,
+              cacheLines: newCacheLines,
+              lastVictim: prev,
+            });
+          } else {
+            // cache hit: no eviction: clear previous victim
+            setConfig({
+              ...config,
+              currentAddress: address,
+              cacheLines: newCacheLines,
+              lastVictim: null,
+            });
+          }
           if (initial) {
             setInitial(false);
           }
