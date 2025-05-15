@@ -124,16 +124,21 @@ export function DirectMapped() {
         <div className="flex gap-3 pt-2.5">
           <div className="flex gap-0.5">
             <p>Hits:</p>
-            <p>0</p>
+            <p>{config.hits}</p>
           </div>
           <div className="flex gap-0.5">
             <p>Misses: </p>
-            <p>0</p>
+            <p>{config.misses}</p>
           </div>
         </div>
         <div className="flex gap-0.5">
           <p>Hit Ratio:</p>
-          <p>0.0%</p>
+          <p>
+            {((config.hits / (config.hits + config.misses) || 0) * 100).toFixed(
+              1,
+            )}
+            %
+          </p>
         </div>
       </div>
     </>

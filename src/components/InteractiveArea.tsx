@@ -17,6 +17,8 @@ interface CacheConfig {
   // cacheQueue: Queue<number>;
   cacheLines: Array<number | null>;
   lastVictim: number | null;
+  hits: number;
+  misses: number;
 }
 
 interface CacheContextType {
@@ -40,6 +42,8 @@ export function InteractiveArea() {
     // cacheQueue: new Queue(),
     cacheLines: Array(2).fill(null),
     lastVictim: null,
+    hits: 0,
+    misses: 0,
   });
   const [initial, setInitial] = useState(true);
 
@@ -73,6 +77,8 @@ export function InteractiveArea() {
                   // cacheQueue: new Queue(),
                   cacheLines: Array(prev.cacheBlocks).fill(null),
                   lastVictim: null,
+                  hits: 0,
+                  misses: 0,
                 }));
                 setInitial(true);
               }}
@@ -96,6 +102,8 @@ export function InteractiveArea() {
                   // cacheQueue: new Queue(),
                   cacheLines: Array(Number(el.target.value)).fill(null),
                   lastVictim: null,
+                  hits: 0,
+                  misses: 0,
                 }));
                 setInitial(true);
               }}
@@ -119,6 +127,8 @@ export function InteractiveArea() {
                   // cacheQueue: new Queue(),
                   cacheLines: Array(prev.cacheBlocks).fill(null),
                   lastVictim: null,
+                  hits: 0,
+                  misses: 0,
                 }));
                 setInitial(true);
               }}
@@ -141,6 +151,8 @@ export function InteractiveArea() {
                   // cacheQueue: new Queue(),
                   cacheLines: Array(prev.cacheBlocks).fill(null),
                   lastVictim: null,
+                  hits: 0,
+                  misses: 0,
                 }));
                 setInitial(true);
               }}
@@ -160,6 +172,8 @@ export function InteractiveArea() {
                 // cacheQueue: new Queue(),
                 cacheLines: Array(prev.cacheBlocks).fill(null),
                 lastVictim: null,
+                hits: 0,
+                misses: 0,
               }));
               setInitial(true);
             }}
