@@ -1,13 +1,12 @@
 "use client";
 
 import { debugging } from "@/lib/constants";
-import { Queue } from "@/lib/queue";
 import { cn } from "@/lib/utils";
 import { createContext, useState } from "react";
 import { DirectMapped } from "./mappings/DirectMapped";
 import { FullyAssociative } from "./mappings/FullyAssociative";
-import { MappingView } from "./mappings/MappingView";
 import { SetAssociative } from "./mappings/SetAssociative";
+import { MappingView } from "./MappingView";
 
 interface CacheConfig {
   ramBlocks: number;
@@ -15,7 +14,11 @@ interface CacheConfig {
   nWay: number;
   blockSize: number;
   currentAddress: number;
-  cacheQueue: Queue<number>;
+  // cacheQueue: Queue<number>;
+  cacheLines: Array<number | null>;
+  lastVictim: number | null;
+  hits: number;
+  misses: number;
 }
 
 interface CacheContextType {
@@ -36,7 +39,11 @@ export function InteractiveArea() {
     nWay: 2,
     blockSize: 2,
     currentAddress: 0,
-    cacheQueue: new Queue(),
+    // cacheQueue: new Queue(),
+    cacheLines: Array(2).fill(null),
+    lastVictim: null,
+    hits: 0,
+    misses: 0,
   });
   const [initial, setInitial] = useState(true);
 
@@ -67,9 +74,13 @@ export function InteractiveArea() {
                   ...prev,
                   ramBlocks: Number(el.target.value),
                   currentAddress: 0,
+                  // cacheQueue: new Queue(),
+                  cacheLines: Array(prev.cacheBlocks).fill(null),
+                  lastVictim: null,
+                  hits: 0,
+                  misses: 0,
                 }));
                 setInitial(true);
-                config.cacheQueue.clear();
               }}
             >
               <option value="4">4</option>
@@ -88,9 +99,13 @@ export function InteractiveArea() {
                   ...prev,
                   cacheBlocks: Number(el.target.value),
                   currentAddress: 0,
+                  // cacheQueue: new Queue(),
+                  cacheLines: Array(Number(el.target.value)).fill(null),
+                  lastVictim: null,
+                  hits: 0,
+                  misses: 0,
                 }));
                 setInitial(true);
-                config.cacheQueue.clear();
               }}
             >
               <option value="2">2</option>
@@ -109,9 +124,13 @@ export function InteractiveArea() {
                   ...prev,
                   nWay: Number(el.target.value),
                   currentAddress: 0,
+                  // cacheQueue: new Queue(),
+                  cacheLines: Array(prev.cacheBlocks).fill(null),
+                  lastVictim: null,
+                  hits: 0,
+                  misses: 0,
                 }));
                 setInitial(true);
-                config.cacheQueue.clear();
               }}
             >
               <option value="2">2</option>
@@ -129,9 +148,13 @@ export function InteractiveArea() {
                   ...prev,
                   blockSize: Number(el.target.value),
                   currentAddress: 0,
+                  // cacheQueue: new Queue(),
+                  cacheLines: Array(prev.cacheBlocks).fill(null),
+                  lastVictim: null,
+                  hits: 0,
+                  misses: 0,
                 }));
                 setInitial(true);
-                config.cacheQueue.clear();
               }}
             >
               <option value="2">2</option>
@@ -146,9 +169,13 @@ export function InteractiveArea() {
               setConfig((prev) => ({
                 ...prev,
                 currentAddress: 0,
+                // cacheQueue: new Queue(),
+                cacheLines: Array(prev.cacheBlocks).fill(null),
+                lastVictim: null,
+                hits: 0,
+                misses: 0,
               }));
               setInitial(true);
-              config.cacheQueue.clear();
             }}
           >
             Reset

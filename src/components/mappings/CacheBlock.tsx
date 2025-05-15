@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@/lib/utils";
+import { cn, getBlock, getOffest, getTag } from "@/lib/utils";
 import { useContext } from "react";
 import { CacheContext } from "../InteractiveArea";
 
@@ -19,29 +19,42 @@ export function CacheBlock({
 
   const { config, initial } = context;
 
-  const offsetBits = Math.floor(Math.log2(config.blockSize));
-  const offsetMask = (1 << offsetBits) - 1;
-  const offset = config.currentAddress & offsetMask;
+  const offset = getOffest(config.currentAddress, config.blockSize);
+  const block = getBlock(
+    config.currentAddress,
+    config.cacheBlocks,
+    config.blockSize,
+  );
+  const tag = getTag(
+    config.currentAddress,
+    config.ramBlocks,
+    config.cacheBlocks,
+    config.blockSize,
+  );
 
-  const blockBits = Math.floor(Math.log2(config.cacheBlocks));
-  const blockMask = ((1 << offsetBits) << blockBits) - 1;
-  const block = (config.currentAddress & blockMask) >>> offsetBits;
+  const loadedBlock = config.cacheLines[index];
+  const blockTag =
+    loadedBlock != null
+      ? getTag(
+          loadedBlock * config.blockSize,
+          config.ramBlocks,
+          config.cacheBlocks,
+          config.blockSize,
+        )
+      : null;
+
+  let isValid = false;
 
   const blockData = [];
   for (let i = 0; i < size; i++) {
-    blockData.push(
-      <div
-        key={i}
-        className={cn(
-          "h-full bg-zinc-300",
-          !initial && block % config.cacheBlocks === index
-            ? offset === i
-              ? "bg-zinc-900"
-              : "bg-zinc-400"
-            : "bg-zinc-300",
-        )}
-      ></div>,
-    );
+    const isCurrentBlock = !initial && block % config.cacheBlocks === index;
+    isValid = !initial && config.cacheLines[index] !== null;
+    let cellClass = isValid ? "bg-zinc-400" : "bg-zinc-300";
+    if (isCurrentBlock) {
+      cellClass = i === offset ? "bg-zinc-900" : "bg-zinc-400";
+    }
+
+    blockData.push(<div key={i} className={cn("h-full", cellClass)}></div>);
   }
 
   return (
@@ -49,21 +62,23 @@ export function CacheBlock({
       <div className="flex items-center justify-center px-1 text-center">
         {index}
       </div>
+      {/* TAG */}
       <div
         className={cn(
           "flex items-center justify-center border-b border-l px-1 text-center",
           isTop && "border-t",
         )}
       >
-        0
+        {blockTag || 0}
       </div>
+      {/* VALID */}
       <div
         className={cn(
           "flex items-center justify-center border-b border-l px-1 text-center",
           isTop && "border-t",
         )}
       >
-        0
+        {isValid ? 1 : 0}
       </div>
       <div
         className={cn(

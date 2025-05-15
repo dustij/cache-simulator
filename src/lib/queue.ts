@@ -1,9 +1,11 @@
-class NodeElement<T> {
-  value: T;
-  next: NodeElement<T> | null = null;
+class NodeElement {
+  value: number; // block number
+  next: NodeElement | null = null;
+  mappedValue: number; // cache number
 
-  constructor(value: T) {
+  constructor(value: number, size: number) {
     this.value = value;
+    this.mappedValue = value % size;
   }
 }
 
@@ -11,16 +13,16 @@ class NodeElement<T> {
  * A FIFO Queue implementation
  */
 export class Queue<T> {
-  private head: NodeElement<T> | null = null;
-  private tail: NodeElement<T> | null = null;
+  private head: NodeElement | null = null;
+  private tail: NodeElement | null = null;
   private length: number = 0;
 
   /**
    * Adds an element to the end of the queue.
    * @param item The item to enqueue.
    */
-  offer(item: T): void {
-    const newNode = new NodeElement(item);
+  offer(item: number, cahceSize: number): void {
+    const newNode = new NodeElement(item, cahceSize);
     if (this.tail) {
       this.tail.next = newNode;
     } else {
@@ -35,7 +37,7 @@ export class Queue<T> {
    * Removes and returns the element at the front of the queue.
    * Returns undefined if the queue is empty.
    */
-  poll(): T | undefined {
+  poll(): number | undefined {
     if (!this.head) return undefined;
     const value = this.head.value;
     this.head = this.head.next;
@@ -51,7 +53,7 @@ export class Queue<T> {
    * Peeks at the element at the front without removing it.
    * Returns undefined if the queue is empty.
    */
-  peek(): T | undefined {
+  peek(): number | undefined {
     return this.head ? this.head.value : undefined;
   }
 
@@ -80,7 +82,7 @@ export class Queue<T> {
   /**
    * Returns true if item is in queue.
    */
-  contains(item: T): boolean {
+  containsValue(item: number): boolean {
     let current = this.head;
     while (current) {
       if (current.value === item) {
@@ -92,9 +94,23 @@ export class Queue<T> {
   }
 
   /**
+   * Returns true if mapped item is in queue.
+   */
+  containsMappedValue(item: number): boolean {
+    let current = this.head;
+    while (current) {
+      if (current.mappedValue === item) {
+        return true;
+      }
+      current = current.next;
+    }
+    return false;
+  }
+
+  /**
    * Allows for-of iteration over the queue (in FIFO order).
    */
-  *[Symbol.iterator](): IterableIterator<T> {
+  *[Symbol.iterator](): IterableIterator<number> {
     let current = this.head;
     while (current) {
       yield current.value;

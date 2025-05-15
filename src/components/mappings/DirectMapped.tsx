@@ -1,5 +1,5 @@
 import { debugging } from "@/lib/constants";
-import { cn } from "@/lib/utils";
+import { cn, getBlock, getOffest, getTag } from "@/lib/utils";
 import { useContext } from "react";
 import { Arrow } from "../Arrow";
 import { CacheContext } from "../InteractiveArea";
@@ -35,27 +35,29 @@ export function DirectMapped() {
           y1={(i % config.cacheBlocks) * 32 + 0.5}
           x2={113}
           y2={i * 32 + 0.5}
-          stroke="rgba(0, 0, 0, 0.15)"
+          stroke={
+            config.cacheLines[i % config.cacheBlocks] === i
+              ? "black"
+              : "rgba(0, 0, 0, 0.15)"
+          }
           strokeWidth={1}
         />
       </svg>,
     );
   }
 
-  const offsetBits = Math.floor(Math.log2(config.blockSize));
-  const offsetMask = (1 << offsetBits) - 1;
-  const offset = config.currentAddress & offsetMask;
-
-  const blockBits = Math.floor(Math.log2(config.cacheBlocks));
-  const blockMask = ((1 << offsetBits) << blockBits) - 1;
-  const block = (config.currentAddress & blockMask) >>> offsetBits;
-
-  const addressSize = Math.floor(
-    Math.log2(config.blockSize * config.ramBlocks),
+  const offset = getOffest(config.currentAddress, config.blockSize);
+  const block = getBlock(
+    config.currentAddress,
+    config.cacheBlocks,
+    config.blockSize,
   );
-
-  const tagBits = addressSize - blockBits - offsetBits;
-  const tag = config.currentAddress >> (addressSize - tagBits);
+  const tag = getTag(
+    config.currentAddress,
+    config.ramBlocks,
+    config.cacheBlocks,
+    config.blockSize,
+  );
 
   return (
     <>
@@ -71,6 +73,7 @@ export function DirectMapped() {
       </div>
       <div className="absolute top-[1px] left-[150px]">
         <p className="text-center">Cache</p>
+        {/* CACHE */}
         <div className="grid grid-cols-[auto_0.5fr_0.5fr_1fr]">
           <div className="p-1"></div>
           <p className="text-center">Tag</p>
@@ -79,13 +82,16 @@ export function DirectMapped() {
           {cacheBlocks}
         </div>
       </div>
+      {/* LINES */}
       {svgLines}
+      {/* RAM */}
       <div className="absolute top-[25px] left-[420px]">
         <p className="text-center">RAM</p>
         <div className="flex flex-col">{ramBlocks}</div>
       </div>
+      {/* DETAILS */}
       <div
-        className={cn("absolute left-[620px]", debugging && "bg-purple-400")}
+        className={cn("absolute left-[632px]", debugging && "bg-purple-400")}
       >
         <div>
           <p className="text-center">Address</p>
@@ -95,28 +101,44 @@ export function DirectMapped() {
           <p className="px-1">Block</p>
           <p className="px-1">Offset</p>
           <div id="tag" className="border px-1">
-            {tag.toString(2).padStart(tagBits, "0")}
+            {tag
+              .toString(2)
+              .padStart(
+                Math.floor(
+                  Math.log2(Math.floor(config.ramBlocks / config.cacheBlocks)),
+                ),
+                "0",
+              )}
           </div>
           <div id="block" className="border-t border-b px-1">
-            {block.toString(2).padStart(blockBits, "0")}
+            {block
+              .toString(2)
+              .padStart(Math.floor(Math.log2(config.cacheBlocks)), "0")}
           </div>
           <div id="offset" className="border px-1">
-            {offset.toString(2).padStart(offsetBits, "0")}
+            {offset
+              .toString(2)
+              .padStart(Math.floor(Math.log2(config.blockSize)), "0")}
           </div>
         </div>
         <div className="flex gap-3 pt-2.5">
           <div className="flex gap-0.5">
             <p>Hits:</p>
-            <p>0</p>
+            <p>{config.hits}</p>
           </div>
           <div className="flex gap-0.5">
             <p>Misses: </p>
-            <p>0</p>
+            <p>{config.misses}</p>
           </div>
         </div>
         <div className="flex gap-0.5">
           <p>Hit Ratio:</p>
-          <p>0.0%</p>
+          <p>
+            {((config.hits / (config.hits + config.misses) || 0) * 100).toFixed(
+              1,
+            )}
+            %
+          </p>
         </div>
       </div>
     </>
