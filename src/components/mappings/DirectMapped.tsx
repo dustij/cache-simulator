@@ -12,7 +12,7 @@ export function DirectMapped() {
   if (!context)
     throw new Error("DirectMapped must be used within a CacheProvider");
 
-  const { config } = context;
+  const { config, initial } = context;
 
   const cacheBlocks = [];
   for (let i = 0; i < config.cacheBlocks; i++) {
@@ -91,7 +91,10 @@ export function DirectMapped() {
       </div>
       {/* DETAILS */}
       <div
-        className={cn("absolute left-[632px]", debugging && "bg-purple-400")}
+        className={cn(
+          "absolute right-0 left-[632px]",
+          debugging && "bg-purple-400",
+        )}
       >
         <div>
           <p className="text-center">Address</p>
@@ -131,7 +134,7 @@ export function DirectMapped() {
             <p>{config.misses}</p>
           </div>
         </div>
-        <div className="flex gap-0.5">
+        <div className="flex gap-0.5 pb-2.5">
           <p>Hit Ratio:</p>
           <p>
             {((config.hits / (config.hits + config.misses) || 0) * 100).toFixed(
@@ -139,6 +142,35 @@ export function DirectMapped() {
             )}
             %
           </p>
+        </div>
+        <div>
+          {initial ? (
+            ""
+          ) : config.wasHit ? (
+            <div>
+              <p>Steps:</p>
+              <ol type="1" className="ml-4 list-decimal">
+                <li>
+                  <p>Check Cache for Tag/Block</p>
+                  <p>HIT - Data Found</p>
+                </li>
+                <li>Copy Data from Cache to CPU</li>
+              </ol>
+            </div>
+          ) : (
+            <div>
+              <p>Steps:</p>
+              <ol type="1" className="ml-4 list-decimal">
+                <li>
+                  <p>Check Cache for Tag/Block</p>
+                  <p>MISS - Data Not in Cache</p>
+                </li>
+                <li>Copy Block from RAM to Cache</li>
+                <li>Update Tag and Valid Bit</li>
+                <li>Copy Data from Cache to CPU</li>
+              </ol>
+            </div>
+          )}
         </div>
       </div>
     </>

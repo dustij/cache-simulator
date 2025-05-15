@@ -19,6 +19,7 @@ interface CacheConfig {
   lastVictim: number | null;
   hits: number;
   misses: number;
+  wasHit: boolean;
 }
 
 interface CacheContextType {
@@ -44,6 +45,7 @@ export function InteractiveArea() {
     lastVictim: null,
     hits: 0,
     misses: 0,
+    wasHit: false,
   });
   const [initial, setInitial] = useState(true);
 
@@ -79,6 +81,7 @@ export function InteractiveArea() {
                   lastVictim: null,
                   hits: 0,
                   misses: 0,
+                  wasHit: false,
                 }));
                 setInitial(true);
               }}
@@ -104,6 +107,7 @@ export function InteractiveArea() {
                   lastVictim: null,
                   hits: 0,
                   misses: 0,
+                  wasHit: false,
                 }));
                 setInitial(true);
               }}
@@ -129,6 +133,7 @@ export function InteractiveArea() {
                   lastVictim: null,
                   hits: 0,
                   misses: 0,
+                  wasHit: false,
                 }));
                 setInitial(true);
               }}
@@ -153,6 +158,7 @@ export function InteractiveArea() {
                   lastVictim: null,
                   hits: 0,
                   misses: 0,
+                  wasHit: false,
                 }));
                 setInitial(true);
               }}
@@ -174,6 +180,7 @@ export function InteractiveArea() {
                 lastVictim: null,
                 hits: 0,
                 misses: 0,
+                wasHit: false,
               }));
               setInitial(true);
             }}
