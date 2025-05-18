@@ -1,12 +1,14 @@
+"use client";
+
 import { debugging } from "@/lib/constants";
-import { cn, getBlock, getOffest, getTag } from "@/lib/utils";
+import { cn, getOffest } from "@/lib/utils";
 import { useContext } from "react";
 import { Arrow } from "../Arrow";
 import { CacheContext } from "../InteractiveArea";
 import { CacheBlock } from "./CacheBlock";
 import { RamBlock } from "./RamBlock";
 
-export function DirectMapped() {
+export function FullyAssociative() {
   const context = useContext(CacheContext);
 
   if (!context)
@@ -28,36 +30,25 @@ export function DirectMapped() {
       <RamBlock key={i} index={i} size={config.blockSize} isTop={i === 0} />,
     );
 
-    svgLines.push(
-      <svg key={i} className="absolute top-[65px] left-[307px]" height={500}>
-        <line
-          x1={0}
-          y1={(i % config.cacheBlocks) * 32 + 0.5}
-          x2={113}
-          y2={i * 32 + 0.5}
-          stroke={
-            config.cacheLines[i % config.cacheBlocks] === i
-              ? "black"
-              : "rgba(0, 0, 0, 0.15)"
-          }
-          strokeWidth={1}
-        />
-      </svg>,
-    );
+    // svgLines.push(
+    //   <svg key={i} className="absolute top-[65px] left-[307px]" height={500}>
+    //     <line
+    //       x1={0}
+    //       y1={(i % config.cacheBlocks) * 32 + 0.5}
+    //       x2={113}
+    //       y2={i * 32 + 0.5}
+    //       stroke={
+    //         config.cacheLines[i % config.cacheBlocks] === i
+    //           ? "black"
+    //           : "rgba(0, 0, 0, 0.15)"
+    //       }
+    //       strokeWidth={1}
+    //     />
+    //   </svg>,
+    // );
   }
 
   const offset = getOffest(config.currentAddress, config.blockSize);
-  const block = getBlock(
-    config.currentAddress,
-    config.cacheBlocks,
-    config.blockSize,
-  );
-  const tag = getTag(
-    config.currentAddress,
-    config.ramBlocks,
-    config.cacheBlocks,
-    config.blockSize,
-  );
 
   return (
     <>
@@ -83,7 +74,7 @@ export function DirectMapped() {
         </div>
       </div>
       {/* LINES */}
-      {svgLines}
+      {/* {svgLines} */}
       {/* RAM */}
       <div className="absolute top-[25px] left-[420px]">
         <p className="text-center">RAM</p>
@@ -99,26 +90,20 @@ export function DirectMapped() {
         <div>
           <p className="text-center">Address</p>
         </div>
-        <div className="grid grid-cols-3">
+        <div className="grid grid-cols-2">
           <p className="px-1">Tag</p>
-          <p className="px-1">Block</p>
           <p className="px-1">Offset</p>
           <div id="tag" className="border px-1">
-            {tag
+            {/* {tag
               .toString(2)
               .padStart(
                 Math.floor(
                   Math.log2(Math.floor(config.ramBlocks / config.cacheBlocks)),
                 ),
                 "0",
-              )}
+              )} */}
           </div>
-          <div id="block" className="border-t border-b px-1">
-            {block
-              .toString(2)
-              .padStart(Math.floor(Math.log2(config.cacheBlocks)), "0")}
-          </div>
-          <div id="offset" className="border px-1">
+          <div id="offset" className="border-t border-r border-b px-1">
             {offset
               .toString(2)
               .padStart(Math.floor(Math.log2(config.blockSize)), "0")}

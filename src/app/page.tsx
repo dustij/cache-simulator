@@ -1,4 +1,4 @@
-import { InteractiveArea } from "@/components/InteractiveArea";
+import OuterView from "@/components/OuterView";
 import { debugging } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 
@@ -15,7 +15,7 @@ export default function Home() {
           Cache Simulator
         </h1>
       </header>
-      <InteractiveArea />
+      <OuterView />
     </div>
   );
 }
