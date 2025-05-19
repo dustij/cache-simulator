@@ -11,7 +11,7 @@ export default function CacheBlock({
   index: number;
   size: number;
 }) {
-  const { state, dispatch } = useContext(StateContext);
+  const { state } = useContext(StateContext);
 
   const addresses: JSX.Element[] = [];
   for (let i = 0; i < state.blockSize; i++) {}
@@ -39,7 +39,7 @@ export default function CacheBlock({
         className={cn(
           "flex h-[32px] w-[70px] flex-col gap-[1px] border-r border-b border-l",
           index === 0 && "border-t",
-          state.blockSize > 4 && "gap-[0.5px]", // todo: change 0 to the size of the block
+          state.blockSize > 4 && "gap-[0.5px]",
         )}
       >
         ???

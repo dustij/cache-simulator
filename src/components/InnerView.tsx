@@ -7,7 +7,7 @@ import FullyAssociative from "./scheme/FullyAssociative";
 import SetAssociative from "./scheme/SetAssociative";
 
 export default function InnerView() {
-  const { state, dispatch } = useContext(StateContext);
+  const { state } = useContext(StateContext);
 
   const views = {
     DIRECT_MAPPED: <DirectMapped />,

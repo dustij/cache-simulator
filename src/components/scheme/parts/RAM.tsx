@@ -5,7 +5,7 @@ import { JSX, useContext } from "react";
 import RAMBlock from "./RAMBlock";
 
 export default function RAM() {
-  const { state, dispatch } = useContext(StateContext);
+  const { state } = useContext(StateContext);
 
   const blocks: JSX.Element[] = [];
   for (let i = 0; i < state.ramBlocksCount; i++) {

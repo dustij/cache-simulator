@@ -5,7 +5,7 @@ import { JSX, useContext } from "react";
 import CacheBlock from "./CacheBlock";
 
 export default function Cache() {
-  const { state, dispatch } = useContext(StateContext);
+  const { state } = useContext(StateContext);
 
   const blocks: JSX.Element[] = [];
   for (let i = 0; i < state.cacheBlocksCount; i++) {

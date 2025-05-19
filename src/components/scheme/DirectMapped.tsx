@@ -8,7 +8,7 @@ import Details from "./parts/Details";
 import RAM from "./parts/RAM";
 
 export default function DirectMapped() {
-  const { state, dispatch } = useContext(StateContext);
+  const { state } = useContext(StateContext);
 
   const lines: JSX.Element[] = [];
   for (let i = 0; i < state.ramBlocksCount; i++) {

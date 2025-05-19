@@ -189,7 +189,7 @@ export default function OuterView() {
     nWay: 2,
     blockSize: 2,
     scheme: directMapped,
-    cacheBlocks: Array(2).fill(null),
+    cacheBlocks: [],
   };
 
   return (

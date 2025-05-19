@@ -24,7 +24,7 @@ function Arrow({ direction }: { direction: "left" | "right" | "up" | "down" }) {
 }
 
 export default function CPU() {
-  const { state, dispatch } = useContext(StateContext);
+  const { state } = useContext(StateContext);
   return (
     <>
       <div className="absolute top-[25px] w-[53px]">
