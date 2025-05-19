@@ -17,22 +17,22 @@ export default function CacheBlock({
   const isValid = thisBlock != null;
   const tag = getTag(thisBlock);
 
+  function getTag(block: number): number {
+    const address = block * state.blockSize;
+    const addressBits = Math.floor(
+      Math.log2(state.blockSize * state.ramBlocksCount),
+    );
+    const tagBits = Math.floor(
+      Math.log2(state.ramBlocksCount / state.cacheBlocksCount),
+    );
+    const shift = addressBits - tagBits;
+    return address >>> shift;
+  }
+
   function getBgColor(address: number): string {
     if (isValid && state.currentAddress === address) return "bg-zinc-900";
     if (isValid) return "bg-zinc-400";
     return "bg-zinc-300";
-  }
-
-  function getTag(block: number): number {
-    const address = block * state.blockSize;
-    const addressSize = Math.floor(
-      Math.log2(state.blockSize * state.ramBlocksCount),
-    );
-    const tagSize = Math.floor(
-      Math.log2(state.ramBlocksCount / state.cacheBlocksCount),
-    );
-    const shift = addressSize - tagSize;
-    return address >>> shift;
   }
 
   const addresses: JSX.Element[] = [];

@@ -180,6 +180,7 @@ function Content() {
 
 export default function OuterView() {
   const initialState: State = {
+    wasHit: false,
     totalHits: 0,
     totalMisses: 0,
     currentAddress: 0,

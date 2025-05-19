@@ -11,6 +11,7 @@ export interface State {
   blockSize: number;
   nWay: number;
   scheme: MappingScheme;
+  wasHit: boolean;
   totalHits: number;
   totalMisses: number;
   currentAddress: number;
@@ -101,6 +102,7 @@ function reducer(state: State, action: DispatchAction): State {
         currentAddress: action.address,
         cacheBlocks: cacheBlocks,
         lastVictim: victim,
+        wasHit: hit,
         totalHits: state.totalHits + (hit ? 1 : 0),
         totalMisses: state.totalMisses + (hit ? 0 : 1),
       };
