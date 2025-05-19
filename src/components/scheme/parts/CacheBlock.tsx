@@ -13,19 +13,39 @@ export default function CacheBlock({
 }) {
   const { state } = useContext(StateContext);
 
+  const thisBlock = state.cacheBlocks[index];
+  const isValid = thisBlock != null;
+  const tag = getTag(thisBlock);
+
+  function getBgColor(address: number): string {
+    if (isValid && state.currentAddress === address) return "bg-zinc-900";
+    if (isValid) return "bg-zinc-400";
+    return "bg-zinc-300";
+  }
+
+  function getTag(block: number): number {
+    const address = block * state.blockSize;
+    const addressSize = Math.floor(
+      Math.log2(state.blockSize * state.ramBlocksCount),
+    );
+    const tagSize = Math.floor(
+      Math.log2(state.ramBlocksCount / state.cacheBlocksCount),
+    );
+    const shift = addressSize - tagSize;
+    return address >>> shift;
+  }
+
   const addresses: JSX.Element[] = [];
-  for (let i = 0; i < state.blockSize; i++) {}
+  for (let i = 0; i < state.blockSize; i++) {
+    const address = thisBlock * size + i;
+    const bgColor = getBgColor(address);
+    addresses.push(<div key={i} className={cn("h-full", bgColor)}></div>);
+  }
 
   return (
     <>
-      <div className="flex items-center justify-center px-1 text-center">?</div>
-      <div
-        className={cn(
-          "flex items-center justify-center border-b border-l px-1 text-center",
-          index === 0 && "border-t",
-        )}
-      >
-        ??
+      <div className="flex items-center justify-center px-1 text-center">
+        {index}
       </div>
       <div
         className={cn(
@@ -33,7 +53,15 @@ export default function CacheBlock({
           index === 0 && "border-t",
         )}
       >
-        ?
+        {tag.toString(16)}
+      </div>
+      <div
+        className={cn(
+          "flex items-center justify-center border-b border-l px-1 text-center",
+          index === 0 && "border-t",
+        )}
+      >
+        {isValid ? 1 : 0}
       </div>
       <div
         className={cn(
@@ -42,7 +70,7 @@ export default function CacheBlock({
           state.blockSize > 4 && "gap-[0.5px]",
         )}
       >
-        ???
+        {addresses}
       </div>
     </>
   );

@@ -16,17 +16,17 @@ export default function RAMBlock({
   const isVictim = state.lastVictim === index;
   const isValid = state.cacheBlocks.includes(index);
 
-  const getBgColor = (address: number, index: number): string => {
+  function getBgColor(address: number): string {
     if (isVictim) return "bg-red-300";
     if (isValid && state.currentAddress === address) return "bg-zinc-900";
     if (isValid) return "bg-zinc-400";
     return "bg-zinc-300";
-  };
+  }
 
   const addresses: JSX.Element[] = [];
   for (let i = 0; i < state.blockSize; i++) {
     const address = index * size + i;
-    const bgColor = getBgColor(address, index);
+    const bgColor = getBgColor(address);
 
     addresses.push(
       <div
