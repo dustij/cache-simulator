@@ -5,7 +5,6 @@ export interface MappingScheme {
   handleAddressClick(
     addr: number,
     state: State,
-    dispath: React.Dispatch<DispatchAction>,
+    dispatch: React.Dispatch<DispatchAction>,
   ): void;
-  getInitialCacheBlocks(state: State): number[];
 }

@@ -6,11 +6,15 @@ export const directMapped: MappingScheme = {
   handleAddressClick: function (
     addr: number,
     state: State,
-    dispath: React.Dispatch<DispatchAction>,
+    dispatch: React.Dispatch<DispatchAction>,
   ): void {
-    throw new Error("Function not implemented.");
-  },
-  getInitialCacheBlocks: function (state: State): number[] {
-    throw new Error("Function not implemented.");
+    const blockIndex = Math.floor(addr / state.blockSize);
+    const cacheIndex = blockIndex % state.cacheBlocksCount;
+    dispatch({
+      type: "LOAD_DIRECT_BLOCK",
+      address: addr,
+      cacheIndex: cacheIndex,
+      blockIndex: blockIndex,
+    });
   },
 };

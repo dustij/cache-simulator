@@ -1,4 +1,8 @@
+"use client";
+
+import { StateContext } from "@/context/StateContext";
 import { cn } from "@/lib/utils";
+import { JSX, useContext } from "react";
 
 export default function CacheBlock({
   index,
@@ -7,6 +11,11 @@ export default function CacheBlock({
   index: number;
   size: number;
 }) {
+  const { state, dispatch } = useContext(StateContext);
+
+  const addresses: JSX.Element[] = [];
+  for (let i = 0; i < state.blockSize; i++) {}
+
   return (
     <>
       <div className="flex items-center justify-center px-1 text-center">?</div>
@@ -30,7 +39,7 @@ export default function CacheBlock({
         className={cn(
           "flex h-[32px] w-[70px] flex-col gap-[1px] border-r border-b border-l",
           index === 0 && "border-t",
-          0 > 4 && "gap-[0.5px]", // todo: change 0 to the size of the block
+          state.blockSize > 4 && "gap-[0.5px]", // todo: change 0 to the size of the block
         )}
       >
         ???

@@ -15,12 +15,11 @@ export interface State {
   totalMisses: number;
   currentAddress: number;
   lastVictim: number | null;
-  cacheBlocks: Array<number | null>;
-  queue: [];
+  cacheBlocks: number[];
 }
 
 export type DispatchAction =
-  | { type: "INIT" }
+  | { type: "RESET" }
   | { type: "SET_DIRECT_SCHEME" }
   | { type: "SET_FULLY_SCHEME" }
   | { type: "SET_SET_SCHEME" }
@@ -36,7 +35,12 @@ export type DispatchAction =
   | { type: "BLOCK_SIZE_TO_4" }
   | { type: "BLOCK_SIZE_TO_8" }
   | { type: "BLOCK_SIZE_TO_16" }
-  | { type: "LOAD_DIRECT_BLOCK" }
+  | {
+      type: "LOAD_DIRECT_BLOCK";
+      address: number;
+      cacheIndex: number;
+      blockIndex: number;
+    }
   | { type: "LOAD_FULLY_BLOCK" }
   | { type: "LOAD_SET_BLOCK" };
 
@@ -48,42 +52,63 @@ export const StateContext = createContext<{
 
 // ---------- Reducer ----------
 function reducer(state: State, action: DispatchAction): State {
+  const clearedValues = {
+    currentAddress: 0,
+    cacheBlocks: [],
+    lastVictim: null,
+    totalHits: 0,
+    totalMisses: 0,
+  };
+
   switch (action.type) {
     case "SET_DIRECT_SCHEME":
-      return { ...state, scheme: directMapped };
+      return { ...state, ...clearedValues, scheme: directMapped };
     case "SET_FULLY_SCHEME":
-      return { ...state, scheme: fullAssociative };
+      return { ...state, ...clearedValues, scheme: fullAssociative };
     case "SET_SET_SCHEME":
-      return { ...state, scheme: setAssociate };
+      return { ...state, ...clearedValues, scheme: setAssociate };
     case "RAM_BLOCKS_TO_4":
-      return { ...state, ramBlocksCount: 4 };
+      return { ...state, ...clearedValues, ramBlocksCount: 4 };
     case "RAM_BLOCKS_TO_8":
-      return { ...state, ramBlocksCount: 8 };
+      return { ...state, ...clearedValues, ramBlocksCount: 8 };
     case "RAM_BLOCKS_TO_16":
-      return { ...state, ramBlocksCount: 16 };
+      return { ...state, ...clearedValues, ramBlocksCount: 16 };
     case "CACHE_BLOCKS_TO_2":
-      return { ...state, cacheBlocksCount: 2 };
+      return { ...state, ...clearedValues, cacheBlocksCount: 2 };
     case "CACHE_BLOCKS_TO_4":
-      return { ...state, cacheBlocksCount: 4 };
+      return { ...state, ...clearedValues, cacheBlocksCount: 4 };
     case "CACHE_BLOCKS_TO_8":
-      return { ...state, cacheBlocksCount: 8 };
+      return { ...state, ...clearedValues, cacheBlocksCount: 8 };
     case "NWAY_TO_2":
-      return { ...state, nWay: 2 };
+      return { ...state, ...clearedValues, nWay: 2 };
     case "NWAY_TO_4":
-      return { ...state, nWay: 4 };
+      return { ...state, ...clearedValues, nWay: 4 };
     case "BLOCK_SIZE_TO_2":
-      return { ...state, blockSize: 2 };
+      return { ...state, ...clearedValues, blockSize: 2 };
     case "BLOCK_SIZE_TO_4":
-      return { ...state, blockSize: 4 };
+      return { ...state, ...clearedValues, blockSize: 4 };
     case "BLOCK_SIZE_TO_8":
-      return { ...state, blockSize: 8 };
+      return { ...state, ...clearedValues, blockSize: 8 };
     case "BLOCK_SIZE_TO_16":
-      return { ...state, blockSize: 16 };
-    case "LOAD_DIRECT_BLOCK":
-    case "INIT":
+      return { ...state, ...clearedValues, blockSize: 16 };
+    case "LOAD_DIRECT_BLOCK": {
+      const cacheBlocks = [...state.cacheBlocks];
+      const hit = cacheBlocks[action.cacheIndex] === action.blockIndex;
+      const victim = !hit ? cacheBlocks[action.cacheIndex] : null;
+      cacheBlocks[action.cacheIndex] = action.blockIndex;
       return {
         ...state,
-        cacheBlocks: state.scheme.getInitialCacheBlocks(state),
+        currentAddress: action.address,
+        cacheBlocks: cacheBlocks,
+        lastVictim: victim,
+        totalHits: state.totalHits + (hit ? 1 : 0),
+        totalMisses: state.totalMisses + (hit ? 0 : 1),
+      };
+    }
+    case "RESET":
+      return {
+        ...state,
+        ...clearedValues,
       };
     case "LOAD_FULLY_BLOCK":
     case "LOAD_SET_BLOCK":

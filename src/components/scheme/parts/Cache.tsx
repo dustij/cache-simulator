@@ -1,9 +1,17 @@
+"use client";
+
 import { StateContext } from "@/context/StateContext";
-import { useContext } from "react";
+import { JSX, useContext } from "react";
 import CacheBlock from "./CacheBlock";
 
 export default function Cache() {
   const { state, dispatch } = useContext(StateContext);
+
+  const blocks: JSX.Element[] = [];
+  for (let i = 0; i < state.cacheBlocksCount; i++) {
+    blocks.push(<CacheBlock key={i} index={i} size={state.blockSize} />);
+  }
+
   return (
     <div className="absolute top-[1px] left-[150px]">
       <p className="text-center">Cache</p>
@@ -12,9 +20,7 @@ export default function Cache() {
         <p className="text-center">Tag</p>
         <p className="text-center">V</p>
         <p className="text-center">Data</p>
-        {state.cacheBlocks.map((_, i) => (
-          <CacheBlock key={i} index={i} size={state.blockSize} />
-        ))}
+        {blocks}
       </div>
     </div>
   );

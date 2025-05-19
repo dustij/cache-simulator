@@ -64,7 +64,9 @@ function Content() {
     }
   }
 
-  function handleClickReset() {}
+  function handleClickReset() {
+    dispatch({ type: "RESET" });
+  }
 
   function handleClickDirectMapped() {
     dispatch({ type: "SET_DIRECT_SCHEME" });
