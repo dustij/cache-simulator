@@ -1,11 +1,11 @@
 "use client";
 
 import { State, StateContext, StateProvider } from "@/context/StateContext";
+import { directMapped } from "@/context/strategies/directMapped";
+import { fullAssociative } from "@/context/strategies/fullyAssociate";
+import { setAssociate } from "@/context/strategies/setAssociative";
 import { debugging } from "@/lib/constants";
 import { cn } from "@/lib/utils";
-import { directMapped } from "@/strategies/directMapped";
-import { fullAssociative } from "@/strategies/fullyAssociate";
-import { setAssociate } from "@/strategies/setAssociative";
 import { ChangeEvent, useContext } from "react";
 import InnerView from "./InnerView";
 

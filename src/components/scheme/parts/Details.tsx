@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 import { useContext } from "react";
 import { getBlock, getOffset, getTag } from "../DirectMapped";
 
-export default function Details() {
+export default function Details({ variant }: { variant?: string }) {
   const { state } = useContext(StateContext);
   const offset = getOffset(state);
   const block = getBlock(state);
@@ -14,7 +14,7 @@ export default function Details() {
   return (
     <div
       className={cn(
-        "absolute right-0 left-[632px]",
+        "absolute right-0 left-[632px] h-full",
         debugging && "bg-purple-400",
       )}
     >
@@ -96,6 +96,11 @@ export default function Details() {
           </div>
         )}
       </div>
+      {variant === "fifo" && (
+        <div className="absolute bottom-0 left-0 w-full p-2">
+          <p>Note: Replacement = FIFO</p>
+        </div>
+      )}
     </div>
   );
 }
