@@ -1,15 +1,18 @@
 "use client";
 
 import { StateContext } from "@/context/StateContext";
+import { schemeVariants } from "@/context/strategies/MappingScheme";
 import { cn } from "@/lib/utils";
 import { JSX, useContext } from "react";
 
 export default function CacheBlock({
   index,
   size,
+  variant,
 }: {
   index: number;
   size: number;
+  variant: schemeVariants;
 }) {
   const { state } = useContext(StateContext);
 
@@ -18,15 +21,24 @@ export default function CacheBlock({
   const tag = getTag(thisBlock);
 
   function getTag(block: number): number {
-    const address = block * state.blockSize;
-    const addressBits = Math.floor(
-      Math.log2(state.blockSize * state.ramBlocksCount),
-    );
-    const tagBits = Math.floor(
-      Math.log2(state.ramBlocksCount / state.cacheBlocksCount),
-    );
-    const shift = addressBits - tagBits;
-    return address >>> shift;
+    switch (variant) {
+      case "direct":
+        const address = block * state.blockSize;
+        const addressBits = Math.floor(
+          Math.log2(state.blockSize * state.ramBlocksCount),
+        );
+        const tagBits = Math.floor(
+          Math.log2(state.ramBlocksCount / state.cacheBlocksCount),
+        );
+        const shift = addressBits - tagBits;
+        return address >>> shift;
+      case "fully":
+        return block ?? 0;
+      case "set":
+        throw Error("Not Implemented");
+      default:
+        throw Error("Cant get tag. Missing variant");
+    }
   }
 
   function getBgColor(address: number): string {
@@ -53,7 +65,7 @@ export default function CacheBlock({
           index === 0 && "border-t",
         )}
       >
-        {tag.toString(16)}
+        {tag.toString(16).toUpperCase()}
       </div>
       <div
         className={cn(

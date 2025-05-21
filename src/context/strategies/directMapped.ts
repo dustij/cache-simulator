@@ -1,4 +1,5 @@
-import { DispatchAction, State } from "@/context/StateContext";
+import { State } from "@/context/StateContext";
+import { DispatchAction } from "../stateReducer";
 import { MappingScheme } from "./MappingScheme";
 
 export const directMapped: MappingScheme = {

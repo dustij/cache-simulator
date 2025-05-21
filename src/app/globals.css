@@ -37,6 +37,10 @@ button:hover {
   @apply cursor-pointer
 }
 
+button:active {
+  @apply bg-black/87 shadow-xs
+}
+
 .radio-button {
   @apply bg-white text-black;
 }

@@ -1,5 +1,5 @@
 import { createContext, ReactNode, useReducer } from "react";
-import { DispatchAction, reducer } from "./StateReducer";
+import { DispatchAction, reducer } from "./stateReducer";
 import { MappingScheme } from "./strategies/MappingScheme";
 
 export interface State {
@@ -14,6 +14,7 @@ export interface State {
   currentAddress: number;
   lastVictim: number | null;
   cacheBlocks: number[];
+  cacheQueue: number[];
 }
 
 export const StateContext = createContext<{

@@ -1,4 +1,5 @@
-import { DispatchAction, State } from "@/context/StateContext";
+import { State } from "@/context/StateContext";
+import { DispatchAction } from "../stateReducer";
 import { MappingScheme } from "./MappingScheme";
 
 export const fullAssociative: MappingScheme = {
@@ -8,6 +9,12 @@ export const fullAssociative: MappingScheme = {
     state: State,
     dispatch: React.Dispatch<DispatchAction>,
   ): void {
-    throw new Error("Function not implemented.");
+    const blockIndex = Math.floor(addr / state.blockSize);
+    dispatch({
+      type: "LOAD_FULLY_BLOCK",
+      address: addr,
+      blockIndex: blockIndex,
+      maxQueueLength: state.cacheBlocksCount,
+    });
   },
 };

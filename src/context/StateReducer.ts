@@ -26,13 +26,19 @@ export type DispatchAction =
       cacheIndex: number;
       blockIndex: number;
     }
-  | { type: "LOAD_FULLY_BLOCK" }
+  | {
+      type: "LOAD_FULLY_BLOCK";
+      address: number;
+      blockIndex: number;
+      maxQueueLength: number;
+    }
   | { type: "LOAD_SET_BLOCK" };
 
 export function reducer(state: State, action: DispatchAction): State {
   const clearedValues = {
     currentAddress: 0,
     cacheBlocks: [],
+    cacheQueue: [],
     lastVictim: null,
     totalHits: 0,
     totalMisses: 0,
@@ -85,6 +91,41 @@ export function reducer(state: State, action: DispatchAction): State {
       };
     }
     case "LOAD_FULLY_BLOCK":
+      let victim = null;
+      if (state.cacheBlocks.includes(action.blockIndex)) {
+        // hit
+        return {
+          ...state,
+          currentAddress: action.address,
+          lastVictim: victim,
+          wasHit: true,
+          totalHits: state.totalHits + 1,
+        };
+      } else {
+        // miss
+        const cacheBlocks = [...state.cacheBlocks];
+        const cacheQueue = [...state.cacheQueue];
+        cacheQueue.push(action.blockIndex);
+
+        if (cacheQueue.length <= action.maxQueueLength) {
+          cacheBlocks.push(action.blockIndex);
+        } else {
+          const evictSlot = cacheBlocks.indexOf(cacheQueue[0]);
+          victim = cacheBlocks[evictSlot];
+          cacheBlocks[evictSlot] = action.blockIndex;
+          cacheQueue.shift();
+        }
+
+        return {
+          ...state,
+          currentAddress: action.address,
+          cacheBlocks: cacheBlocks,
+          cacheQueue: cacheQueue,
+          lastVictim: victim,
+          wasHit: false,
+          totalMisses: state.totalMisses + 1,
+        };
+      }
     case "LOAD_SET_BLOCK":
     case "RESET":
       return {

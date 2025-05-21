@@ -1,15 +1,18 @@
 "use client";
 
 import { StateContext } from "@/context/StateContext";
+import { schemeVariants } from "@/context/strategies/MappingScheme";
 import { JSX, useContext } from "react";
 import CacheBlock from "./CacheBlock";
 
-export default function Cache() {
+export default function Cache({ variant }: { variant: schemeVariants }) {
   const { state } = useContext(StateContext);
 
   const blocks: JSX.Element[] = [];
   for (let i = 0; i < state.cacheBlocksCount; i++) {
-    blocks.push(<CacheBlock key={i} index={i} size={state.blockSize} />);
+    blocks.push(
+      <CacheBlock key={i} index={i} size={state.blockSize} variant={variant} />,
+    );
   }
 
   return (

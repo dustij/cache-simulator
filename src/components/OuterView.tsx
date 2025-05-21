@@ -191,6 +191,7 @@ export default function OuterView() {
     blockSize: 2,
     scheme: directMapped,
     cacheBlocks: [],
+    cacheQueue: [],
   };
 
   return (

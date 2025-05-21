@@ -1,16 +1,32 @@
 "use client";
 
 import { StateContext } from "@/context/StateContext";
+import { schemeVariants } from "@/context/strategies/MappingScheme";
 import { debugging } from "@/lib/constants";
-import { cn } from "@/lib/utils";
+import { cn, getBlock, getOffset, getTag } from "@/lib/utils";
 import { useContext } from "react";
-import { getBlock, getOffset, getTag } from "../DirectMapped";
 
-export default function Details({ variant }: { variant?: string }) {
+export default function Details({ variant }: { variant: schemeVariants }) {
   const { state } = useContext(StateContext);
-  const offset = getOffset(state);
-  const block = getBlock(state);
-  const tag = getTag(state);
+  const offset = getOffset(state, variant);
+  const block = getBlock(state, variant);
+  const tag = getTag(state, variant);
+
+  const tagPadLength: number = (() => {
+    switch (variant) {
+      case "direct":
+        return Math.floor(
+          Math.log2(Math.floor(state.ramBlocksCount / state.cacheBlocksCount)),
+        );
+      case "fully":
+        return Math.floor(Math.log2(state.ramBlocksCount));
+      case "set":
+        throw Error("Not implemented");
+      default:
+        throw Error("Can't pad tag. Missing variant.");
+    }
+  })();
+
   return (
     <div
       className={cn(
@@ -21,28 +37,33 @@ export default function Details({ variant }: { variant?: string }) {
       <div>
         <p className="text-center">Address</p>
       </div>
-      <div className="grid grid-cols-3">
+      <div
+        className={cn(
+          "grid",
+          variant === "fully" ? "grid-cols-2" : "grid-cols-3",
+        )}
+      >
         <p className="px-1">Tag</p>
-        <p className="px-1">Block</p>
+        {variant === "direct" && <p className="px-1">Block</p>}
+        {variant === "set" && <p className="px-1">Set</p>}
         <p className="px-1">Offset</p>
         <div id="tag" className="border px-1">
-          {tag
-            .toString(2)
-            .padStart(
-              Math.floor(
-                Math.log2(
-                  Math.floor(state.ramBlocksCount / state.cacheBlocksCount),
-                ),
-              ),
-              "0",
-            )}
+          {tag.toString(2).padStart(tagPadLength, "0")}
         </div>
-        <div id="block" className="border-t border-b px-1">
-          {block
-            .toString(2)
-            .padStart(Math.floor(Math.log2(state.cacheBlocksCount)), "0")}
-        </div>
-        <div id="offset" className="border px-1">
+        {variant != "fully" && (
+          <div id="block" className="border-t border-b px-1">
+            {block
+              .toString(2)
+              .padStart(Math.floor(Math.log2(state.cacheBlocksCount)), "0")}
+          </div>
+        )}
+        <div
+          id="offset"
+          className={cn(
+            "px-1",
+            variant === "fully" ? "border-t border-r border-b" : "border",
+          )}
+        >
           {offset
             .toString(2)
             .padStart(Math.floor(Math.log2(state.blockSize)), "0")}
@@ -96,7 +117,7 @@ export default function Details({ variant }: { variant?: string }) {
           </div>
         )}
       </div>
-      {variant === "fifo" && (
+      {variant != "direct" && (
         <div className="absolute bottom-0 left-0 w-full p-2">
           <p>Note: Replacement = FIFO</p>
         </div>
