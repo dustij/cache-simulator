@@ -10,11 +10,9 @@ export const setAssociate: MappingScheme = {
     dispatch: React.Dispatch<DispatchAction>,
   ): void {
     const blockIndex = Math.floor(addr / state.blockSize);
-    const cacheIndex = blockIndex % state.cacheBlocksCount;
     dispatch({
       type: "LOAD_SET_BLOCK",
       address: addr,
-      cacheIndex: cacheIndex,
       blockIndex: blockIndex,
     });
   },

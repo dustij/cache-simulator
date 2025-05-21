@@ -9,14 +9,23 @@ import RAM from "./parts/RAM";
 
 export default function SetAssociative() {
   const { state } = useContext(StateContext);
-  const setsCount = Math.floor(state.cacheBlocksCount / state.nWay);
+  const numSets = Math.floor(state.numCacheBlocks / state.nWay);
 
   const lines: JSX.Element[] = [];
-  for (let i = 0; i < state.ramBlocksCount; i++) {
+  for (let i = 0; i < state.numRamBlocks; i++) {
     const blockHeight = 32;
-    const setIndex = i % setsCount;
+    const setIndex = i % numSets;
     const setHeight = blockHeight * state.nWay;
     const y1pos = setIndex * setHeight + setHeight / 2 + 0.5 - 12;
+
+    // Determine if this RAM block's tag is present in its corresponding cache set
+    const nWay = state.nWay;
+    const setsCount = Math.floor(state.numCacheBlocks / nWay);
+    const setIndexForBlock = i % setsCount;
+    const setStart = setIndexForBlock * nWay;
+    const setEnd = setStart + nWay;
+    const isInCacheSet = state.cacheBlocks.slice(setStart, setEnd).includes(i);
+
     lines.push(
       <svg key={i} className="absolute top-[65px] left-[307px]" height={500}>
         <line
@@ -24,11 +33,7 @@ export default function SetAssociative() {
           y1={y1pos}
           x2={113}
           y2={i * 32 + 0.5}
-          stroke={
-            state.cacheBlocks[i % state.cacheBlocksCount] === i
-              ? "black"
-              : "rgba(0, 0, 0, 0.15)"
-          }
+          stroke={isInCacheSet ? "black" : "rgba(0, 0, 0, 0.15)"}
           strokeWidth={1}
         />
       </svg>,

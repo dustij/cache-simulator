@@ -3,8 +3,8 @@ import { DispatchAction, reducer } from "./stateReducer";
 import { MappingScheme } from "./strategies/MappingScheme";
 
 export interface State {
-  ramBlocksCount: number;
-  cacheBlocksCount: number;
+  numRamBlocks: number;
+  numCacheBlocks: number;
   blockSize: number;
   nWay: number;
   scheme: MappingScheme;
@@ -15,6 +15,7 @@ export interface State {
   lastVictim: number | null;
   cacheBlocks: number[];
   cacheQueue: number[];
+  headPointers: number[];
 }
 
 export const StateContext = createContext<{

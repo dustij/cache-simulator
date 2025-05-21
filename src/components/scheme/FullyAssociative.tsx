@@ -14,7 +14,7 @@ export default function FullyAssociative() {
       <svg key={i} className="absolute top-[65px] left-[307px]" height={500}>
         <line
           x1={0}
-          y1={(i % state.cacheBlocksCount) * 32 + 0.5}
+          y1={(i % state.numCacheBlocks) * 32 + 0.5}
           x2={113}
           y2={state.cacheBlocks[i] * 32 + 0.5}
           stroke="black"

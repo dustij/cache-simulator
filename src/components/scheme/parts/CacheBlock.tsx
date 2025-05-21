@@ -23,24 +23,35 @@ export default function CacheBlock({
   const setUpper = Math.ceil(index / state.nWay);
 
   function getTag(block: number): number {
+    let address = block * state.blockSize;
+    let addressBits = 0;
+    let tagBits = 0;
+    let shift = 0;
+
     switch (variant) {
       case "direct":
-        let address = block * state.blockSize;
-        let addressBits = Math.floor(
-          Math.log2(state.blockSize * state.ramBlocksCount),
+        addressBits = Math.floor(
+          Math.log2(state.blockSize * state.numRamBlocks),
         );
-        const tagBits = Math.floor(
-          Math.log2(state.ramBlocksCount / state.cacheBlocksCount),
+        tagBits = Math.floor(
+          Math.log2(state.numRamBlocks / state.numCacheBlocks),
         );
-        const shift = addressBits - tagBits;
+        shift = addressBits - tagBits;
         return address >>> shift;
       case "fully":
         return block ?? 0;
       case "set":
-        // const setsCount = Math.floor(state.cacheBlocksCount / state.nWay);
-        // return Math.floor(Math.log2(state.ramBlocksCount / setsCount));
-        return 0;
-
+        // Set-associative: compute tag by stripping offset and set bits
+        addressBits = Math.floor(
+          Math.log2(state.blockSize * state.numRamBlocks),
+        );
+        const offsetBits = Math.floor(Math.log2(state.blockSize));
+        const setsCount = state.numCacheBlocks / state.nWay;
+        const setBits = Math.floor(Math.log2(setsCount));
+        const addrValue = block * state.blockSize;
+        // shift out offset and set bits to leave just the tag
+        shift = offsetBits + setBits;
+        return addrValue >>> shift;
       default:
         throw Error("Cant get tag. Missing variant");
     }

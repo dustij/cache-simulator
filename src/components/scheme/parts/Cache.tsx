@@ -10,7 +10,7 @@ export default function Cache({ variant }: { variant: schemeVariants }) {
   const { state } = useContext(StateContext);
 
   const blocks: JSX.Element[] = [];
-  for (let i = 0; i < state.cacheBlocksCount; i++) {
+  for (let i = 0; i < state.numCacheBlocks; i++) {
     blocks.push(
       <CacheBlock key={i} index={i} size={state.blockSize} variant={variant} />,
     );

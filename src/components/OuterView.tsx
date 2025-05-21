@@ -13,7 +13,7 @@ import InnerView from "./InnerView";
 function Content() {
   const { state, dispatch } = useContext(StateContext);
 
-  function handleChangeRamBlocksCount(e: ChangeEvent<HTMLSelectElement>) {
+  function handleChangenumRamBlocks(e: ChangeEvent<HTMLSelectElement>) {
     switch (e.target.value) {
       case "4":
         return dispatch({ type: "RAM_BLOCKS_TO_4" });
@@ -26,7 +26,7 @@ function Content() {
     }
   }
 
-  function handleChangeCacheBlocksCount(e: ChangeEvent<HTMLSelectElement>) {
+  function handleChangenumCacheBlocks(e: ChangeEvent<HTMLSelectElement>) {
     switch (e.target.value) {
       case "2":
         // If nWay is 4, setting cache blocks to 2 will crash the program
@@ -101,8 +101,8 @@ function Content() {
             <label htmlFor="ram-blocks-count">Ram Blocks:</label>
             <select
               name="ram-blocks-count"
-              value={state.ramBlocksCount}
-              onChange={handleChangeRamBlocksCount}
+              value={state.numRamBlocks}
+              onChange={handleChangenumRamBlocks}
             >
               <option value="4">4</option>
               <option value="8">8</option>
@@ -113,8 +113,8 @@ function Content() {
             <label htmlFor="cache-blocks-count">Cache Blocks:</label>
             <select
               name="cache-block-count"
-              value={state.cacheBlocksCount}
-              onChange={handleChangeCacheBlocksCount}
+              value={state.numCacheBlocks}
+              onChange={handleChangenumCacheBlocks}
             >
               <option value="2">2</option>
               <option value="4">4</option>
@@ -125,7 +125,7 @@ function Content() {
             <label htmlFor="n-way">N-Way:</label>
             <select name="n-way" value={state.nWay} onChange={handleChangeNWay}>
               <option value="2">2</option>
-              {state.cacheBlocksCount >= 4 && <option value="4">4</option>}
+              {state.numCacheBlocks >= 4 && <option value="4">4</option>}
             </select>
           </div>
           <div className="flex gap-2">
@@ -193,13 +193,14 @@ export default function OuterView() {
     totalMisses: 0,
     currentAddress: 0,
     lastVictim: null,
-    ramBlocksCount: 4,
-    cacheBlocksCount: 2,
+    numRamBlocks: 4,
+    numCacheBlocks: 2,
     nWay: 2,
     blockSize: 2,
     scheme: directMapped,
     cacheBlocks: [],
     cacheQueue: [],
+    headPointers: Array(1).fill(0),
   };
 
   return (

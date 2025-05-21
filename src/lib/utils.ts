@@ -13,48 +13,46 @@ export function getTag(
   block?: number,
 ): number {
   const addressBits = Math.floor(
-    Math.log2(state.blockSize * state.ramBlocksCount),
+    Math.log2(state.blockSize * state.numRamBlocks),
   );
 
   let tagBits = 0;
 
   if (variant === "direct") {
-    tagBits = Math.floor(
-      Math.log2(state.ramBlocksCount / state.cacheBlocksCount),
-    );
+    tagBits = Math.floor(Math.log2(state.numRamBlocks / state.numCacheBlocks));
   }
 
   if (variant === "fully") {
     if (block) {
       return block;
     }
-    tagBits = Math.floor(Math.log2(state.ramBlocksCount));
+    tagBits = Math.floor(Math.log2(state.numRamBlocks));
   }
 
   if (variant === "set") {
-    const setsCount = Math.floor(state.cacheBlocksCount / state.nWay);
-    tagBits = Math.floor(Math.log2(state.ramBlocksCount / setsCount));
+    const numSets = Math.floor(state.numCacheBlocks / state.nWay);
+    tagBits = Math.floor(Math.log2(state.numRamBlocks / numSets));
   }
 
   const shift = addressBits - tagBits;
   return state.currentAddress >>> shift;
 }
 
-export function getBlock(state: State, variant: schemeVariants): number {
-  const blockBits = Math.floor(Math.log2(state.cacheBlocksCount));
+export function getBlock(state: State): number {
+  const blockBits = Math.floor(Math.log2(state.numCacheBlocks));
   const bitOffset = Math.floor(Math.log2(state.blockSize));
   const mask = ((1 << blockBits) << bitOffset) - 1;
   return (state.currentAddress & mask) >>> bitOffset;
 }
 
-export function getOffset(state: State, variant: schemeVariants): number {
+export function getOffset(state: State): number {
   const offsetBits = Math.floor(Math.log2(state.blockSize));
   const mask = (1 << offsetBits) - 1;
   return state.currentAddress & mask;
 }
 
-export function getSet(state: State, variant: schemeVariants): number {
+export function getSet(state: State): number {
   const blockNumber = Math.floor(state.currentAddress / state.blockSize);
-  const setsCount = Math.floor(state.cacheBlocksCount / state.nWay);
-  return blockNumber % setsCount;
+  const numSets = Math.floor(state.numCacheBlocks / state.nWay);
+  return blockNumber % numSets;
 }

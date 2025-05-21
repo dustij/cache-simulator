@@ -14,7 +14,7 @@ export const fullAssociative: MappingScheme = {
       type: "LOAD_FULLY_BLOCK",
       address: addr,
       blockIndex: blockIndex,
-      maxQueueLength: state.cacheBlocksCount,
+      maxQueueLength: state.numCacheBlocks,
     });
   },
 };
