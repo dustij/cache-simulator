@@ -58,7 +58,9 @@ export default function Details({ variant }: { variant: schemeVariants }) {
               ? block
                   .toString(2)
                   .padStart(Math.floor(Math.log2(state.numCacheBlocks)), "0")
-              : set.toString(2).padStart(Math.floor(Math.log2(numSets)), "0")}
+              : numSets > 1
+                ? set.toString(2).padStart(Math.floor(Math.log2(numSets)), "0")
+                : ""}
           </div>
         )}
         <div
