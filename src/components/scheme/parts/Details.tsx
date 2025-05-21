@@ -1,7 +1,7 @@
 "use client";
 
 import { StateContext } from "@/context/StateContext";
-import { schemeVariants } from "@/context/strategies/MappingScheme";
+import { schemeVariants } from "@/context/strategies/mappingScheme";
 import { debugging } from "@/lib/constants";
 import { cn, getBlock, getOffset, getSet, getTag } from "@/lib/utils";
 import { useContext } from "react";

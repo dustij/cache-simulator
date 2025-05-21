@@ -1,7 +1,7 @@
 "use client";
 
 import { StateContext } from "@/context/StateContext";
-import { schemeVariants } from "@/context/strategies/MappingScheme";
+import { schemeVariants } from "@/context/strategies/mappingScheme";
 import { cn } from "@/lib/utils";
 import { JSX, useContext } from "react";
 

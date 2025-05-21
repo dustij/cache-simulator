@@ -1,6 +1,6 @@
 import { createContext, ReactNode, useReducer } from "react";
 import { DispatchAction, reducer } from "./stateReducer";
-import { MappingScheme } from "./strategies/MappingScheme";
+import { MappingScheme } from "./strategies/mappingScheme";
 
 export interface State {
   numRamBlocks: number;

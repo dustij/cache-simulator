@@ -1,6 +1,6 @@
 import { State } from "@/context/StateContext";
 import { DispatchAction } from "../stateReducer";
-import { MappingScheme } from "./MappingScheme";
+import { MappingScheme } from "./mappingScheme";
 
 export const directMapped: MappingScheme = {
   name: "DIRECT_MAPPED",

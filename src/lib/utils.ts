@@ -1,5 +1,5 @@
 import { State } from "@/context/StateContext";
-import { schemeVariants } from "@/context/strategies/MappingScheme";
+import { schemeVariants } from "@/context/strategies/mappingScheme";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
