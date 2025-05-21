@@ -26,10 +26,14 @@ export function getTag(
 
   if (variant === "fully") {
     if (block) {
-      console.log("called getTag with block: " + block);
       return block;
     }
     tagBits = Math.floor(Math.log2(state.ramBlocksCount));
+  }
+
+  if (variant === "set") {
+    const setsCount = Math.floor(state.cacheBlocksCount / state.nWay);
+    tagBits = Math.floor(Math.log2(state.ramBlocksCount / setsCount));
   }
 
   const shift = addressBits - tagBits;
@@ -47,4 +51,10 @@ export function getOffset(state: State, variant: schemeVariants): number {
   const offsetBits = Math.floor(Math.log2(state.blockSize));
   const mask = (1 << offsetBits) - 1;
   return state.currentAddress & mask;
+}
+
+export function getSet(state: State, variant: schemeVariants): number {
+  const blockNumber = Math.floor(state.currentAddress / state.blockSize);
+  const setsCount = Math.floor(state.cacheBlocksCount / state.nWay);
+  return blockNumber % setsCount;
 }

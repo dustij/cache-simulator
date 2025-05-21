@@ -3,14 +3,16 @@
 import { StateContext } from "@/context/StateContext";
 import { schemeVariants } from "@/context/strategies/MappingScheme";
 import { debugging } from "@/lib/constants";
-import { cn, getBlock, getOffset, getTag } from "@/lib/utils";
+import { cn, getBlock, getOffset, getSet, getTag } from "@/lib/utils";
 import { useContext } from "react";
 
 export default function Details({ variant }: { variant: schemeVariants }) {
   const { state } = useContext(StateContext);
   const offset = getOffset(state, variant);
   const block = getBlock(state, variant);
+  const set = getSet(state, variant);
   const tag = getTag(state, variant);
+  const setsCount = Math.floor(state.cacheBlocksCount / state.nWay);
 
   const tagPadLength: number = (() => {
     switch (variant) {
@@ -21,7 +23,7 @@ export default function Details({ variant }: { variant: schemeVariants }) {
       case "fully":
         return Math.floor(Math.log2(state.ramBlocksCount));
       case "set":
-        throw Error("Not implemented");
+        return Math.floor(Math.log2(state.ramBlocksCount / setsCount));
       default:
         throw Error("Can't pad tag. Missing variant.");
     }
@@ -52,9 +54,11 @@ export default function Details({ variant }: { variant: schemeVariants }) {
         </div>
         {variant != "fully" && (
           <div id="block" className="border-t border-b px-1">
-            {block
-              .toString(2)
-              .padStart(Math.floor(Math.log2(state.cacheBlocksCount)), "0")}
+            {variant == "direct"
+              ? block
+                  .toString(2)
+                  .padStart(Math.floor(Math.log2(state.cacheBlocksCount)), "0")
+              : set.toString(2).padStart(Math.floor(Math.log2(setsCount)), "0")}
           </div>
         )}
         <div

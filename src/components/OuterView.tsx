@@ -7,6 +7,7 @@ import { setAssociate } from "@/context/strategies/setAssociative";
 import { debugging } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { ChangeEvent, useContext } from "react";
+import { flushSync } from "react-dom";
 import InnerView from "./InnerView";
 
 function Content() {
@@ -28,6 +29,13 @@ function Content() {
   function handleChangeCacheBlocksCount(e: ChangeEvent<HTMLSelectElement>) {
     switch (e.target.value) {
       case "2":
+        // If nWay is 4, setting cache blocks to 2 will crash the program
+        // force nWay to 2 before continuing
+        if (state.nWay === 4) {
+          flushSync(() => {
+            dispatch({ type: "NWAY_TO_2" });
+          });
+        }
         return dispatch({ type: "CACHE_BLOCKS_TO_2" });
       case "4":
         return dispatch({ type: "CACHE_BLOCKS_TO_4" });
@@ -117,7 +125,7 @@ function Content() {
             <label htmlFor="n-way">N-Way:</label>
             <select name="n-way" value={state.nWay} onChange={handleChangeNWay}>
               <option value="2">2</option>
-              <option value="4">4</option>
+              {state.cacheBlocksCount >= 4 && <option value="4">4</option>}
             </select>
           </div>
           <div className="flex gap-2">

@@ -19,12 +19,14 @@ export default function CacheBlock({
   const thisBlock = state.cacheBlocks[index];
   const isValid = thisBlock != null;
   const tag = getTag(thisBlock);
+  const setIndex = Math.floor(index / state.nWay);
+  const setUpper = Math.ceil(index / state.nWay);
 
   function getTag(block: number): number {
     switch (variant) {
       case "direct":
-        const address = block * state.blockSize;
-        const addressBits = Math.floor(
+        let address = block * state.blockSize;
+        let addressBits = Math.floor(
           Math.log2(state.blockSize * state.ramBlocksCount),
         );
         const tagBits = Math.floor(
@@ -35,7 +37,10 @@ export default function CacheBlock({
       case "fully":
         return block ?? 0;
       case "set":
-        throw Error("Not Implemented");
+        // const setsCount = Math.floor(state.cacheBlocksCount / state.nWay);
+        // return Math.floor(Math.log2(state.ramBlocksCount / setsCount));
+        return 0;
+
       default:
         throw Error("Cant get tag. Missing variant");
     }
@@ -56,9 +61,11 @@ export default function CacheBlock({
 
   return (
     <>
-      <div className="flex items-center justify-center px-1 text-center">
-        {index}
-      </div>
+      {variant != "set" && (
+        <div className="flex items-center justify-center px-1 text-center">
+          {index}
+        </div>
+      )}
       <div
         className={cn(
           "flex items-center justify-center border-b border-l px-1 text-center",
@@ -84,6 +91,18 @@ export default function CacheBlock({
       >
         {addresses}
       </div>
+      {variant === "set" && setUpper == setIndex && (
+        <div
+          className={cn(
+            "flex items-center justify-center border-r border-b px-1 text-center",
+            state.nWay === 2 && "row-span-2",
+            state.nWay === 4 && "row-span-4",
+            index === 0 && "border-t",
+          )}
+        >
+          {setIndex}
+        </div>
+      )}
     </>
   );
 }

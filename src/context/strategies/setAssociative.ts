@@ -9,6 +9,13 @@ export const setAssociate: MappingScheme = {
     state: State,
     dispatch: React.Dispatch<DispatchAction>,
   ): void {
-    throw new Error("Function not implemented.");
+    const blockIndex = Math.floor(addr / state.blockSize);
+    const cacheIndex = blockIndex % state.cacheBlocksCount;
+    dispatch({
+      type: "LOAD_SET_BLOCK",
+      address: addr,
+      cacheIndex: cacheIndex,
+      blockIndex: blockIndex,
+    });
   },
 };

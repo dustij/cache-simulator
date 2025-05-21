@@ -60,3 +60,11 @@ button:active {
 .radio-button.selected {
   @apply bg-black text-white;
 }
+
+.radio-button:active {
+  @apply shadow-inner;
+}
+
+.radio-button.selected:active {
+  @apply bg-black/87 text-white shadow-xs;
+}

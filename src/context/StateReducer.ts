@@ -32,7 +32,12 @@ export type DispatchAction =
       blockIndex: number;
       maxQueueLength: number;
     }
-  | { type: "LOAD_SET_BLOCK" };
+  | {
+      type: "LOAD_SET_BLOCK";
+      address: number;
+      cacheIndex: number;
+      blockIndex: number;
+    };
 
 export function reducer(state: State, action: DispatchAction): State {
   const clearedValues = {
@@ -127,6 +132,20 @@ export function reducer(state: State, action: DispatchAction): State {
         };
       }
     case "LOAD_SET_BLOCK":
+      // Deep‐clone 2D cacheBlocks array so each inner set (way) can be modified
+      // without mutating the original state; cast through unknown to satisfy TS.
+      // const cacheBlocks = (state.cacheBlocks as unknown as number[][]).map(
+      //   (set) => [...set],
+      // );
+      // const setsCount = Math.floor(state.cacheBlocksCount / state.nWay);
+      // const setIndex = action.cacheIndex % setsCount;
+      // const set = cacheBlocks[setIndex];
+      // set[0] = action.blockIndex; // todo: fix this later, not index 0 but use queue to determine
+      // return {
+      //   ...state,
+      //   cacheBlocks
+      // }
+      return { ...state, currentAddress: action.address };
     case "RESET":
       return {
         ...state,
