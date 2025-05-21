@@ -8,7 +8,7 @@ export default function RAM() {
   const { state } = useContext(StateContext);
 
   const blocks: JSX.Element[] = [];
-  for (let i = 0; i < state.ramBlocksCount; i++) {
+  for (let i = 0; i < state.numRamBlocks; i++) {
     blocks.push(<RAMBlock key={i} index={i} size={state.blockSize} />);
   }
 

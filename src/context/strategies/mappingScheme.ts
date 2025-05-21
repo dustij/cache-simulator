@@ -1,4 +1,7 @@
-import { DispatchAction, State } from "@/context/StateContext";
+import { State } from "@/context/StateContext";
+import { DispatchAction } from "../stateReducer";
+
+export type schemeVariants = "direct" | "fully" | "set";
 
 export interface MappingScheme {
   name: string;
